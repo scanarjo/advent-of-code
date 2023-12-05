@@ -54,41 +54,34 @@ func ParsePartNumbers(lines ...string) []int {
 				if i > 0 {
 					num := FindNumberAtPosition(lines[i-1], j)
 					if num == 0 {
-						partNumbers = append(partNumbers, FindNumberAtPosition(lines[i-1], j-1))
-						partNumbers = append(partNumbers, FindNumberAtPosition(lines[i-1], j+1))
+						partNumbers = AppendIfNotZero(partNumbers, FindNumberAtPosition(lines[i-1], j-1))
+						partNumbers = AppendIfNotZero(partNumbers, FindNumberAtPosition(lines[i-1], j+1))
 					} else {
-						partNumbers = append(partNumbers, num)
+						partNumbers = AppendIfNotZero(partNumbers, num)
 					}
 				}
 				// check adjacent
 				if j > 0 {
-					partNumbers = append(partNumbers, FindNumberAtPosition(lines[i], j-1))
+					partNumbers = AppendIfNotZero(partNumbers, FindNumberAtPosition(lines[i], j-1))
 				}
 				if j+1 < len(line) {
-					partNumbers = append(partNumbers, FindNumberAtPosition(lines[i], j+1))
+					partNumbers = AppendIfNotZero(partNumbers, FindNumberAtPosition(lines[i], j+1))
 				}
 				// check below
 				if i+1 < len(lines) {
 					num := FindNumberAtPosition(lines[i+1], j)
 					if num == 0 {
-						partNumbers = append(partNumbers, FindNumberAtPosition(lines[i+1], j-1))
-						partNumbers = append(partNumbers, FindNumberAtPosition(lines[i+1], j+1))
+						partNumbers = AppendIfNotZero(partNumbers, FindNumberAtPosition(lines[i+1], j-1))
+						partNumbers = AppendIfNotZero(partNumbers, FindNumberAtPosition(lines[i+1], j+1))
 					} else {
-						partNumbers = append(partNumbers, num)
+						partNumbers = AppendIfNotZero(partNumbers, num)
 					}
 				}
 			}
 		}
 	}
 
-	nonZeroPartNumbers := []int{}
-	for _, partNumber := range partNumbers {
-		if partNumber != 0 {
-			nonZeroPartNumbers = append(nonZeroPartNumbers, partNumber)
-		}
-	}
-
-	return nonZeroPartNumbers
+	return partNumbers
 }
 
 func AppendIfNotZero(slice []int, n int) []int {
