@@ -2,8 +2,8 @@ package seedmapping
 
 import (
 	"bufio"
+	"math"
 	"os"
-	"strconv"
 	"strings"
 	"testing"
 )
@@ -89,22 +89,14 @@ func TestMappingInputFile(t *testing.T) {
 
 	scanner := bufio.NewScanner(file)
 
-	seeds := []Measurement{}
-
 	scanner.Scan()
 
 	serializedSeeds := scanner.Text()
 
-	stringSeeds := strings.Fields(serializedSeeds)
+	seeds, err := DeserializeSeedList(serializedSeeds)
 
-	for i := 1; i < len(stringSeeds); i++ {
-		seed := Measurement{
-			unit: "seed",
-		}
-
-		seed.value, _ = strconv.Atoi(stringSeeds[i])
-
-		seeds = append(seeds, seed)
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
 	}
 
 	scanner.Scan()
@@ -127,6 +119,85 @@ func TestMappingInputFile(t *testing.T) {
 		if seed.value < actual.value {
 			actual = seed
 		}
+	}
+
+	if actual != expected {
+		t.Errorf("Expected %v, but got %v", expected, actual)
+	}
+}
+
+func TestReverseMap(t *testing.T) {
+	mapping := Mapping{
+		source:      "seed",
+		destination: "soil",
+		ranges: []MappingRange{
+			{destinationStart: 50, sourceStart: 98, rangeLength: 2},
+			{destinationStart: 52, sourceStart: 50, rangeLength: 48},
+		},
+	}
+
+	expected := Measurement{value: 98, unit: "seed"}
+
+	actual, _ := mapping.ReverseMap(Measurement{value: 50, unit: "soil"})
+
+	if *actual != expected {
+		t.Errorf("Expected %v, but got %v", expected, *actual)
+	}
+}
+
+func TestMappingInputFileWithUpdatedSeedParsing(t *testing.T) {
+	file, _ := os.Open("input.txt")
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	scanner.Scan()
+
+	serializedSeeds := scanner.Text()
+
+	seedPairs, err := DeserializeSeedListV2(serializedSeeds)
+
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
+
+	scanner.Scan()
+
+	mappings := []Mapping{}
+	for mapping, err := DeserializeMapping(scanner); err == nil; mapping, err = DeserializeMapping(scanner) {
+		mappings = append(mappings, *mapping)
+	}
+
+	actual := Measurement{
+		value: math.MaxInt64,
+		unit:  "location",
+	}
+
+	for _, seedPair := range seedPairs {
+		rangeMin := math.MaxInt64
+		for i := seedPair.min.value; i <= seedPair.max.value; i++ {
+			measurement := Measurement{value: i, unit: seedPair.min.unit}
+
+			for _, mapping := range mappings {
+				destinationMeasurement, _ := mapping.Map(measurement)
+
+				measurement = *destinationMeasurement
+
+			}
+
+			if measurement.value < rangeMin {
+				rangeMin = measurement.value
+			}
+		}
+
+		if rangeMin < actual.value {
+			actual.value = rangeMin
+		}
+	}
+
+	expected := Measurement{
+		value: 196167384,
+		unit:  "location",
 	}
 
 	if actual != expected {

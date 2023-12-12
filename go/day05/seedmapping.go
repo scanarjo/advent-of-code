@@ -43,6 +43,23 @@ func (mapping *Mapping) Map(measurement Measurement) (*Measurement, error) {
 	return &destinationMeasurement, nil
 }
 
+func (mapping *Mapping) ReverseMap(destination Measurement) (*Measurement, error) {
+	if destination.unit != mapping.destination {
+		return nil, errors.New("invalid unit")
+	}
+
+	source := Measurement{value: destination.value, unit: mapping.source}
+
+	for _, mappingRange := range mapping.ranges {
+		if destination.value >= mappingRange.destinationStart && destination.value < mappingRange.destinationStart+mappingRange.rangeLength {
+			source.value = mappingRange.sourceStart + (destination.value - mappingRange.destinationStart)
+			break
+		}
+	}
+
+	return &source, nil
+}
+
 func parseHeader(header string) (string, string, error) {
 	values := strings.Fields(header)
 
@@ -116,4 +133,58 @@ func DeserializeMapping(scanner *bufio.Scanner) (*Mapping, error) {
 	}
 
 	return &mapping, nil
+}
+
+func DeserializeSeedList(serializedSeedList string) ([]Measurement, error) {
+	stringSeeds := strings.Fields(serializedSeedList)
+
+	if stringSeeds[0] != "seeds:" {
+		return nil, fmt.Errorf("invalid seed list: %s", serializedSeedList)
+	}
+
+	seeds := []Measurement{}
+	for i := 1; i < len(stringSeeds); i++ {
+		seed := Measurement{
+			unit: "seed",
+		}
+
+		seed.value, _ = strconv.Atoi(stringSeeds[i])
+
+		seeds = append(seeds, seed)
+	}
+
+	return seeds, nil
+}
+
+type MeasurementPair struct {
+	min Measurement
+	max Measurement
+}
+
+func DeserializeSeedListV2(serializedSeedList string) ([]MeasurementPair, error) {
+	stringSeeds := strings.Fields(serializedSeedList)
+
+	if stringSeeds[0] != "seeds:" {
+		return nil, fmt.Errorf("invalid seed list: %s", serializedSeedList)
+	}
+
+	seeds := []MeasurementPair{}
+	for i := 1; i+1 < len(stringSeeds); i += 2 {
+		start, _ := strconv.Atoi(stringSeeds[i])
+		rangeLength, _ := strconv.Atoi(stringSeeds[i+1])
+
+		min := Measurement{
+			value: start,
+			unit:  "seed",
+		}
+
+		max := Measurement{
+			value: start + rangeLength - 1,
+			unit:  "seed",
+		}
+
+		seeds = append(seeds, MeasurementPair{min: min, max: max})
+	}
+
+	return seeds, nil
 }
