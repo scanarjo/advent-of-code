@@ -1,9 +1,8 @@
+import { resolve } from '@std/path';
 import { readFileIntoLines } from '../utils/fs.ts';
 import { calculateWinnings } from './camel-cards.ts';
 import { calculateWinningsWithJokers } from './jokers.ts';
 import { parseHand } from './parsing.ts';
-
-import { resolve } from '@std/path';
 
 const input = readFileIntoLines(
   resolve(import.meta.dirname ?? Deno.cwd(), './input.txt'),
