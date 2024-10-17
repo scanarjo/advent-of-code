@@ -1,10 +1,7 @@
-import { resolve } from '@std/path/resolve';
-import { readFileIntoLines } from '../utils/fs.ts';
+import { readInputFile } from '../utils/fs.ts';
 import { marginForError, waysToWin } from './boat-races.ts';
 
-const input = readFileIntoLines(
-  resolve(import.meta.dirname ?? Deno.cwd(), './input.txt'),
-);
+const input = readInputFile(import.meta.dirname);
 
 const readLineData = (line: string) => {
   const [, ...dataPoints] = line.split(/[\s]+/);
