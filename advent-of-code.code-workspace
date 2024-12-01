@@ -14,6 +14,7 @@
   "settings": {
     "[typescript]": {
       "editor.defaultFormatter": "denoland.vscode-deno"
-    }
+    },
+    "github.copilot.editor.enableAutoCompletions": false
   }
 }
