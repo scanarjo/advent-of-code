@@ -30,3 +30,21 @@ export const parseData = (data: string): [number[], number[]] => {
 
   return [listA, listB];
 };
+
+export const similarity = (target: number, list: number[]): number => {
+  let score = 0;
+  for (const n of list) {
+    if (n === target) score += target;
+  }
+  return score;
+};
+
+export const listSimilarity = (listA: number[], listB: number[]): number => {
+  let totalScore = 0;
+
+  for (const a of listA) {
+    totalScore += similarity(a, listB);
+  }
+
+  return totalScore;
+};
