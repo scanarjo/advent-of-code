@@ -1,8 +1,15 @@
-export function add(a: number, b: number): number {
-  return a + b;
-}
+export const distance = (a: number, b: number): number => {
+  return Math.abs(a - b);
+};
 
-// Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
-if (import.meta.main) {
-  console.log("Add 2 + 3 =", add(2, 3));
-}
+export const listDistance = (listA: number[], listB: number[]): number => {
+  const sortedA = listA.toSorted();
+  const sortedB = listB.toSorted();
+
+  let totalDistance = 0;
+  for (let i = 0; i < sortedA.length; i++) {
+    totalDistance += distance(sortedA[i], sortedB[i]);
+  }
+
+  return totalDistance;
+};
