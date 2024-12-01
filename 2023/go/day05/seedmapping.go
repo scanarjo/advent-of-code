@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -185,6 +186,8 @@ func DeserializeSeedListV2(serializedSeedList string) ([]MeasurementPair, error)
 
 		seeds = append(seeds, MeasurementPair{min: min, max: max})
 	}
+
+	fmt.Fprintln(os.Stdout, []any{"seeds %v", seeds}...)
 
 	return seeds, nil
 }

@@ -1,10 +1,14 @@
 {
   "folders": [
     {
-      "path": "deno2"
+      "name": "root",
+      "path": "."
     },
     {
-      "path": "go"
+      "path": "2023"
+    },
+    {
+      "path": "2024"
     }
   ],
   "settings": {}
