@@ -11,5 +11,9 @@
       "path": "2024"
     }
   ],
-  "settings": {}
+  "settings": {
+    "[typescript]": {
+      "editor.defaultFormatter": "denoland.vscode-deno"
+    }
+  }
 }

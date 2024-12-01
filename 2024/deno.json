@@ -1,4 +1,7 @@
 {
+  "fmt": {
+    "singleQuote": true
+  },
   "tasks": {
     "dev": "deno run --watch main.ts"
   },

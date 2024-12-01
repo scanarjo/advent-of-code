@@ -22,7 +22,7 @@ export const parseData = (data: string): [number[], number[]] => {
   for (const line of lines) {
     const [a, b] = line.split(/\s+/);
 
-    if (a === "") continue;
+    if (a === '') continue;
 
     listA.push(parseInt(a, 10));
     listB.push(parseInt(b, 10));
@@ -51,7 +51,7 @@ export const listSimilarity = (listA: number[], listB: number[]): number => {
 
 export const fastListSimilarity = (
   listA: number[],
-  listB: number[]
+  listB: number[],
 ): number => {
   const occurrences = listB.reduce((map, n) => {
     const count = map.get(n) ?? 0;
