@@ -1,6 +1,6 @@
 import { assertEquals } from "@std/assert";
 
-import { distance, listDistance } from "./main.ts";
+import { distance, listDistance, parseData } from "./lib.ts";
 
 Deno.test("it should calculate the distance between two numbers", () => {
   assertEquals(distance(4, 1), 3);
@@ -32,3 +32,18 @@ Deno.test(
     assertEquals(listDistance(listA, listB), listDistance(sortedA, sortedB));
   }
 );
+
+Deno.test("it should parse the list data correctly", () => {
+  const data = `3   4
+4   3
+2   5
+1   3
+3   9
+3   3
+`;
+
+  assertEquals(parseData(data), [
+    [3, 4, 2, 1, 3, 3],
+    [4, 3, 5, 3, 9, 3],
+  ]);
+});

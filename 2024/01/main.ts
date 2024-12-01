@@ -1,15 +1,13 @@
-export const distance = (a: number, b: number): number => {
-  return Math.abs(a - b);
-};
+import { listDistance, parseData } from "./lib.ts";
 
-export const listDistance = (listA: number[], listB: number[]): number => {
-  const sortedA = listA.toSorted();
-  const sortedB = listB.toSorted();
+const decoder = new TextDecoder("utf-8");
 
-  let totalDistance = 0;
-  for (let i = 0; i < sortedA.length; i++) {
-    totalDistance += distance(sortedA[i], sortedB[i]);
-  }
+const buffer = Deno.readFileSync("./input.txt");
 
-  return totalDistance;
-};
+const text = decoder.decode(buffer);
+
+const [listA, listB] = parseData(text);
+
+const distance = listDistance(listA, listB);
+
+console.log("Answer to Part 1:", distance);
