@@ -48,3 +48,21 @@ export const listSimilarity = (listA: number[], listB: number[]): number => {
 
   return totalScore;
 };
+
+export const fastListSimilarity = (
+  listA: number[],
+  listB: number[]
+): number => {
+  const occurrences = listB.reduce((map, n) => {
+    const count = map.get(n) ?? 0;
+
+    map.set(n, count + 1);
+
+    return map;
+  }, new Map<number, number>());
+
+  return listA.reduce((total, n) => {
+    const occurrencesOfN = occurrences.get(n) ?? 0;
+    return total + n * occurrencesOfN;
+  }, 0);
+};
