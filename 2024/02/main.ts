@@ -1,12 +1,9 @@
+import { readLinesFromFileBuffer } from '../utils.ts';
 import { isSafe, parseReport } from './lib.ts';
-
-const decoder = new TextDecoder('utf-8');
 
 const buffer = Deno.readFileSync('./input.txt');
 
-const text = decoder.decode(buffer);
-
-const lines = text.split(/[\r\n]+/).filter((line) => line !== '');
+const lines = readLinesFromFileBuffer(buffer);
 
 const reports = lines.map(parseReport);
 
