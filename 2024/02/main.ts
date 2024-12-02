@@ -8,7 +8,18 @@ const text = decoder.decode(buffer);
 
 const lines = text.split(/[\r\n]+/).filter((line) => line !== '');
 
-const safeReportCount =
-  lines.map(parseReport).map(isSafe).filter((result) => result === true).length;
+const reports = lines.map(parseReport);
 
-console.log('Part 1: There are ', safeReportCount, ' safe reports');
+const safeReportCount = reports
+  .map((report) => isSafe(report))
+  .filter((result) => result === true)
+  .length;
+
+console.log('Part 1: There are', safeReportCount, 'safe reports');
+
+const safeEnoughReportCount = reports
+  .map((report) => isSafe(report, 1))
+  .filter((result) => result === true)
+  .length;
+
+console.log('Part 2: There are', safeEnoughReportCount, 'safe enough reports');

@@ -23,6 +23,13 @@ Deno.test('Report Safety', async (t) => {
       assertEquals(isSafe([1, 1, 2, 3]), false);
     },
   );
+
+  await t.step(
+    'if the tolerance it set it should allow a number of failures',
+    () => {
+      assertEquals(isSafe([1, 3, 2, 4, 5], 1), true);
+    },
+  );
 });
 
 Deno.test('Report parsing', async (t) => {
