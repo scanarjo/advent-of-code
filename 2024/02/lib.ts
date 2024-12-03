@@ -6,9 +6,10 @@ const removeAt = (target: number, report: Report) =>
 export const isSafe = (report: Report): boolean => {
   const isIncreasing = report[1] > report[0];
 
-  for (let i = 0; i < report.length - 1; i++) {
-    const current = report.at(i)!;
-    const next = report.at(i + 1)!;
+  return report.every((current, i) => {
+    const next = report.at(i + 1);
+
+    if (!next) return true;
 
     const diff = next - current;
 
@@ -19,17 +20,13 @@ export const isSafe = (report: Report): boolean => {
     if (![1, 2, 3].includes(Math.abs(diff))) {
       return false;
     }
-  }
 
-  return true;
+    return true;
+  });
 };
 
 export const isSafeEnough = (report: Report): boolean => {
-  for (let i = 0; i < report.length; i++) {
-    if (isSafe(removeAt(i, report))) return true;
-  }
-
-  return false;
+  return report.some((_, i) => isSafe(removeAt(i, report)));
 };
 
 export const parseReport = (report: string): Report => {
