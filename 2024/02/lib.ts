@@ -7,17 +7,16 @@ export const isSafe = (report: Report): boolean => {
   const isIncreasing = report[1] > report[0];
 
   for (let i = 0; i < report.length - 1; i++) {
-    if (isIncreasing && report[i + 1] < report[i]) {
+    const current = report.at(i)!;
+    const next = report.at(i + 1)!;
+
+    const diff = next - current;
+
+    if (isIncreasing ? diff < 0 : diff > 0) {
       return false;
     }
 
-    if (!isIncreasing && report[i + 1] > report[i]) {
-      return false;
-    }
-
-    const diff = Math.abs(report[i + 1] - report[i]);
-
-    if (diff < 1 || diff > 3) {
+    if (![1, 2, 3].includes(Math.abs(diff))) {
       return false;
     }
   }
