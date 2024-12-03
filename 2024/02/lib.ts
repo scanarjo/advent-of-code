@@ -3,8 +3,14 @@ type Report = number[];
 const removeAt = (target: number, report: Report) =>
   report.filter((_, i) => i !== target);
 
+const isPositive = (n: number) => n > 0;
+
+const isNegative = (n: number) => n < 0;
+
 export const isSafe = (report: Report): boolean => {
   const isIncreasing = report[1] > report[0];
+
+  const isInconsistent = isIncreasing ? isNegative : isPositive;
 
   return report.every((current, i) => {
     const next = report.at(i + 1);
@@ -13,7 +19,7 @@ export const isSafe = (report: Report): boolean => {
 
     const diff = next - current;
 
-    if (isIncreasing ? diff < 0 : diff > 0) {
+    if (isInconsistent(diff)) {
       return false;
     }
 
