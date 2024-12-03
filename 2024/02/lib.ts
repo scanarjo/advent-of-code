@@ -1,4 +1,6 @@
-export const isSafe = (report: number[], tolerance = 0): boolean => {
+type Report = number[];
+
+export const isSafe = (report: Report, tolerance = 0): boolean => {
   const isIncreasing = report[1] > report[0];
 
   let failures = 0;
@@ -37,6 +39,6 @@ export const isSafe = (report: number[], tolerance = 0): boolean => {
   return false;
 };
 
-export const parseReport = (report: string): number[] => {
+export const parseReport = (report: string): Report => {
   return report.split(' ').map((entry) => parseInt(entry, 10));
 };
