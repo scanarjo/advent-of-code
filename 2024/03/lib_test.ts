@@ -1,10 +1,6 @@
 import { assertEquals } from '@std/assert';
 
-import {
-  executeInstruction,
-  findInstructions,
-  findMulInstructions,
-} from './lib.ts';
+import { findInstructions, findMulInstructions } from './lib.ts';
 
 Deno.test('findMulInstructions', async (t) => {
   await t.step('it should correctly find all mul instructions', () => {
@@ -38,22 +34,4 @@ Deno.test('findInstructions', async (t) => {
       ],
     );
   });
-});
-
-Deno.test('executeInstruction', async (t) => {
-  await t.step('it should correctly execute "mul" instructions', () => {
-    assertEquals(executeInstruction({ type: 'mul', x: 2, y: 3 }), 6);
-  });
-  await t.step(
-    'it should correctly execute "do" instructions as a noop',
-    () => {
-      assertEquals(executeInstruction({ type: 'do' }), 0);
-    },
-  );
-  await t.step(
-    'it should correctly execute "dont" instructions as a noop',
-    () => {
-      assertEquals(executeInstruction({ type: 'dont' }), 0);
-    },
-  );
 });

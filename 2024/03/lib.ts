@@ -4,18 +4,16 @@ type DontInstruction = { type: 'dont' };
 
 type Instruction = MulInstruction | DoInstruction | DontInstruction;
 
+const makeMul = (x: string, y: string): MulInstruction => ({
+  type: 'mul',
+  x: parseInt(x, 10),
+  y: parseInt(y, 10),
+});
+
 export const findMulInstructions = (code: string): MulInstruction[] => {
-  return code.matchAll(/mul\((\d{1,3}),(\d{1,3})\)/g).toArray().map(
-    ([_, x, y]) => {
-      return { type: 'mul', x: parseInt(x, 10), y: parseInt(y, 10) };
-    },
+  return findInstructions(code).filter((instruction) =>
+    instruction.type === 'mul'
   );
-};
-
-export const executeInstruction = (instruction: Instruction) => {
-  if (instruction.type === 'mul') return instruction.x * instruction.y;
-
-  return 0;
 };
 
 type State = {
@@ -26,7 +24,7 @@ type State = {
 export const executeInstructions = (instructions: Instruction[]): State => {
   return instructions.reduce(({ count, mulEnabled }: State, instruction) => {
     if (instruction.type === 'mul' && mulEnabled) {
-      return { count: count + executeInstruction(instruction), mulEnabled };
+      return { count: count + instruction.x * instruction.y, mulEnabled };
     } else if (instruction.type === 'do') {
       return { count, mulEnabled: true };
     } else if (instruction.type === 'dont') {
@@ -48,6 +46,6 @@ export const findInstructions = (code: string): Instruction[] => {
 
       const [x, y] = args;
 
-      return { type: 'mul', x: parseInt(x, 10), y: parseInt(y, 10) };
+      return makeMul(x, y);
     });
 };
