@@ -9,9 +9,7 @@ const input = await fetchPuzzleInput(2024, 3);
 
 const instructions = findMulInstructions(input);
 
-const total = executeInstructions(instructions);
-
-console.log('Part 1: Total is', total);
+console.log('Part 1: Total is', executeInstructions(instructions));
 
 const newInstructions = findInstructions(input);
 
