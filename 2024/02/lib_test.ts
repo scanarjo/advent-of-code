@@ -1,5 +1,5 @@
 import { assertEquals } from '@std/assert';
-import { isSafe, parseReport } from './lib.ts';
+import { isSafe, isSafeEnough, parseReport } from './lib.ts';
 
 Deno.test('Report Safety', async (t) => {
   await t.step(
@@ -27,7 +27,7 @@ Deno.test('Report Safety', async (t) => {
   await t.step(
     'if the tolerance it set it should allow a number of failures',
     () => {
-      assertEquals(isSafe([1, 3, 2, 4, 5], 1), true);
+      assertEquals(isSafeEnough([1, 3, 2, 4, 5]), true);
     },
   );
 });

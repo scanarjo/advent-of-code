@@ -3,34 +3,29 @@ type Report = number[];
 const removeAt = (target: number, report: Report) =>
   report.filter((_, i) => i !== target);
 
-export const isSafe = (report: Report, tolerance = 0): boolean => {
+export const isSafe = (report: Report): boolean => {
   const isIncreasing = report[1] > report[0];
 
-  let failures = 0;
   for (let i = 0; i < report.length - 1; i++) {
     if (isIncreasing && report[i + 1] < report[i]) {
-      failures++;
+      return false;
     }
 
     if (!isIncreasing && report[i + 1] > report[i]) {
-      failures++;
+      return false;
     }
 
     const diff = Math.abs(report[i + 1] - report[i]);
 
     if (diff < 1 || diff > 3) {
-      failures++;
-    }
-
-    if (failures > tolerance) {
-      break;
+      return false;
     }
   }
 
-  if (failures === 0) return true;
+  return true;
+};
 
-  if (tolerance === 0 && failures > 0) return false;
-
+export const isSafeEnough = (report: Report): boolean => {
   for (let i = 0; i < report.length; i++) {
     if (isSafe(removeAt(i, report))) return true;
   }
