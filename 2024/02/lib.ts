@@ -1,5 +1,8 @@
 type Report = number[];
 
+const removeAt = (target: number, report: Report) =>
+  report.filter((_, i) => i !== target);
+
 export const isSafe = (report: Report, tolerance = 0): boolean => {
   const isIncreasing = report[1] > report[0];
 
@@ -29,11 +32,7 @@ export const isSafe = (report: Report, tolerance = 0): boolean => {
   if (tolerance === 0 && failures > 0) return false;
 
   for (let i = 0; i < report.length; i++) {
-    if (i === 0 && isSafe(report.slice(1))) return true;
-
-    if (i === report.length - 1 && isSafe(report.slice(0, i))) return true;
-
-    if (isSafe([...report.slice(0, i), ...report.slice(i + 1)])) return true;
+    if (isSafe(removeAt(i, report))) return true;
   }
 
   return false;
