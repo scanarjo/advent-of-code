@@ -1,7 +1,7 @@
 import { env } from 'node:process';
 
-const splitIntoLines = (text: string): string[] => {
-  return text.trimEnd().split(/\r?\n/);
+export const splitIntoLines = (text: string): string[] => {
+  return text.trim().split(/\r?\n/);
 };
 
 const fetchPuzzleInputFromAOCWebsite = async (
