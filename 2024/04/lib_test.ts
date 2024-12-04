@@ -4,19 +4,9 @@ import { splitIntoLines } from '../utils.ts';
 import {
   countCrossMASOccurrences,
   countGridOccurrences,
-  countOccurences,
   getColumns,
   getDiagonals,
 } from './lib.ts';
-
-Deno.test('countOccurrences', async (t) => {
-  await t.step(
-    'it should count the occurrences of the specified substring',
-    () => {
-      assertEquals(countOccurences('XMAS', 'ABCXMASXMASDEF'), 2);
-    },
-  );
-});
 
 Deno.test('getColumns', async (t) => {
   await t.step('it should get the correct columns from a set of rows', () => {

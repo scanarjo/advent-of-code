@@ -1,7 +1,3 @@
-export const countOccurences = (target: string, text: string): number => {
-  return text.matchAll(new RegExp(target, 'g')).toArray().length;
-};
-
 export const getColumns = (rows: string[]): string[] => {
   const columns: string[][] = [];
 
@@ -112,10 +108,16 @@ const reverseString = (input: string): string => {
   return input.split('').toReversed().join('');
 };
 
+const countMatches = (regex: RegExp, text: string): number => {
+  return text.matchAll(regex).toArray().length;
+};
+
 const countOccurencesBothWays = (target: string, text: string) => {
   const reversed = reverseString(text);
 
-  return countOccurences(target, text) + countOccurences(target, reversed);
+  const regex = new RegExp(target, 'g');
+
+  return countMatches(regex, text) + countMatches(regex, reversed);
 };
 
 export const countGridOccurrences = (
@@ -137,25 +139,39 @@ export const countGridOccurrences = (
     .reduce((sum, n) => sum + n, 0);
 };
 
-const checkForCrossMAS = (rows: string[], [x, y]: Coordinate): boolean => {
-  const relevantSquare = rows.slice(y - 1, y + 2).map((row) =>
-    row.slice(x - 1, x + 2)
-  );
+const getCross = (rows: string[], centre: Coordinate) => {
+  const getChar = getCharAtCoord(rows);
 
-  const diagonals = getDiagonals(relevantSquare);
+  const centreChar = getChar(centre);
 
-  const count = diagonals.map((diagonal) =>
-    countOccurencesBothWays('MAS', diagonal)
-  ).reduce((sum, n) => sum + n, 0);
+  const [x, y] = centre;
+  return [
+    `${getChar([x - 1, y - 1])}${centreChar}${getChar([x + 1, y + 1])}`,
+    `${getChar([x - 1, y + 1])}${centreChar}${getChar([x + 1, y - 1])}`,
+  ];
+};
 
-  return count === 2;
+const sum = (numbers: number[]) => numbers.reduce((sum, n) => sum + n, 0);
+
+const checkForCrossMAS = (rows: string[], coord: Coordinate): boolean => {
+  const cross = getCross(rows, coord);
+
+  const counts = cross
+    .map((diagonal) => countOccurencesBothWays('MAS', diagonal));
+
+  return sum(counts) === 2;
+};
+
+const getDimensions = (rows: string[]): [width: number, height: number] => {
+  return [rows[0].length, rows.length];
 };
 
 export const countCrossMASOccurrences = (rows: string[]): number => {
-  let count = 0;
+  const [width, height] = getDimensions(rows);
 
-  for (let y = 1; y < rows.length - 1; y++) {
-    for (let x = 1; x < rows[0].length - 1; x++) {
+  let count = 0;
+  for (let y = 1; y < height - 1; y++) {
+    for (let x = 1; x < width - 1; x++) {
       if (rows[y][x] === 'A') {
         if (checkForCrossMAS(rows, [x, y])) count++;
       }
