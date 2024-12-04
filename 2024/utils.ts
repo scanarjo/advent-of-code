@@ -8,24 +8,44 @@ export const fetchPuzzleInput = async (
   year: number,
   day: number,
 ): Promise<string> => {
-  const sessionToken = env.SESSION;
+  try {
+    console.log('Reading cached input file...');
 
-  if (!sessionToken) throw new Error('SESSION variable must be set');
+    const text = await Deno.readTextFile('input.txt');
 
-  const response = await fetch(
-    `https://adventofcode.com/${year}/day/${day}/input`,
-    {
-      headers: {
-        cookie: `session=${sessionToken}`,
+    console.log('File found');
+
+    return text;
+  } catch {
+    console.log('Failed to read cached file. Fetching from network...');
+
+    const sessionToken = env.SESSION;
+
+    if (!sessionToken) throw new Error('SESSION variable must be set');
+
+    const response = await fetch(
+      `https://adventofcode.com/${year}/day/${day}/input`,
+      {
+        headers: {
+          cookie: `session=${sessionToken}`,
+        },
       },
-    },
-  );
+    );
 
-  if (!response.ok) {
-    throw new Error(response.statusText);
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    console.log('Input fetched from network');
+
+    const text = await response.text();
+
+    await Deno.writeTextFile('input.txt', text);
+
+    console.log('File cached');
+
+    return text;
   }
-
-  return response.text();
 };
 
 export const fetchPuzzleInputLines = async (year: number, day: number) => {
