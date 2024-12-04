@@ -1,6 +1,6 @@
 import { env } from 'node:process';
 
-export const splitIntoLines = (text: string): string[] => {
+const splitIntoLines = (text: string): string[] => {
   return text.trimEnd().split(/\r?\n/);
 };
 

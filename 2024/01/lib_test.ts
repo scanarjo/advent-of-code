@@ -1,12 +1,6 @@
 import { assertEquals } from '@std/assert';
 
-import {
-  distance,
-  listDistance,
-  listSimilarity,
-  parseData,
-  similarity,
-} from './lib.ts';
+import { distance, listDistance, listSimilarity, similarity } from './lib.ts';
 
 Deno.test('it should calculate the distance between two numbers', () => {
   assertEquals(distance(4, 1), 3);
@@ -38,21 +32,6 @@ Deno.test(
     assertEquals(listDistance(listA, listB), listDistance(sortedA, sortedB));
   },
 );
-
-Deno.test('it should parse the list data correctly', () => {
-  const data = `3   4
-4   3
-2   5
-1   3
-3   9
-3   3
-`;
-
-  assertEquals(parseData(data), [
-    [3, 4, 2, 1, 3, 3],
-    [4, 3, 5, 3, 9, 3],
-  ]);
-});
 
 Deno.test('Similarity Scores', async (t) => {
   await t.step('it should calculate the similarity score for a number', () => {

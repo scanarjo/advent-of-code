@@ -1,3 +1,4 @@
+import { fetchPuzzleInputLines } from '../utils.ts';
 import {
   fastListSimilarity,
   listDistance,
@@ -5,13 +6,9 @@ import {
   parseData,
 } from './lib.ts';
 
-const decoder = new TextDecoder('utf-8');
+const lines = await fetchPuzzleInputLines(2024, 1);
 
-const buffer = Deno.readFileSync('./input.txt');
-
-const text = decoder.decode(buffer);
-
-const [listA, listB] = parseData(text);
+const [listA, listB] = parseData(lines);
 
 Deno.bench('distance', () => {
   listDistance(listA, listB);

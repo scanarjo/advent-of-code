@@ -1,9 +1,9 @@
-import { fetchPuzzleInput } from '../utils.ts';
+import { fetchPuzzleInputLines } from '../utils.ts';
 import { listDistance, listSimilarity, parseData } from './lib.ts';
 
-const input = await fetchPuzzleInput(2024, 1);
+const lines = await fetchPuzzleInputLines(2024, 1);
 
-const [listA, listB] = parseData(input);
+const [listA, listB] = parseData(lines);
 
 const distance = listDistance(listA, listB);
 

@@ -14,15 +14,12 @@ export const listDistance = (listA: number[], listB: number[]): number => {
   return totalDistance;
 };
 
-export const parseData = (data: string): [number[], number[]] => {
+export const parseData = (lines: string[]): [number[], number[]] => {
   const listA: number[] = [];
   const listB: number[] = [];
 
-  const lines = data.split(/[\r\n]+/);
   for (const line of lines) {
     const [a, b] = line.split(/\s+/);
-
-    if (a === '') continue;
 
     listA.push(parseInt(a, 10));
     listB.push(parseInt(b, 10));
