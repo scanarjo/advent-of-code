@@ -18,46 +18,41 @@ export const getColumns = (rows: string[]): string[] => {
   return columns.map((column) => column.join(''));
 };
 
-type Translation = (coord: Coordinate) => Coordinate;
+type Translation = (point: Point) => Point;
 
 const walkGrid = (
   rows: string[],
-  start: Coordinate,
+  start: Point,
   move: Translation,
 ): string => {
-  const getChar = getCharAtCoord(rows);
-  const [width, height] = getDimensions(rows);
-  const inBounds = isInBounds(width, height);
+  const getChar = getCharAtPoint(rows);
 
   let path = '';
-  let coord = start;
-  while (inBounds(coord)) {
-    path += getChar(coord);
-    coord = move(coord);
+  let point = start;
+  while (isInBounds(rows, point)) {
+    path += getChar(point);
+    point = move(point);
   }
 
   return path;
 };
 
-type Coordinate = [X: number, Y: number];
+type Point = [X: number, Y: number];
 const getUpRightDiagonals = (
   rows: string[],
 ): string[] => {
-  const [width, height] = getDimensions(rows);
+  const size = getGridSize(rows);
 
-  const firstColumn: Coordinate[] = [];
-  for (let y = 0; y < height; y++) {
-    firstColumn.push([0, y]);
+  const startingPoints: Point[] = [];
+  for (let y = 0; y < size; y++) {
+    startingPoints.push([0, y]);
   }
 
-  const lastRow: Coordinate[] = [];
-  for (let x = 1; x < width; x++) {
-    lastRow.push([x, height - 1]);
+  for (let x = 1; x < size; x++) {
+    startingPoints.push([x, size - 1]);
   }
 
-  const startingCoords = firstColumn.concat(lastRow);
-
-  return startingCoords.map((start) => {
+  return startingPoints.map((start) => {
     return walkGrid(rows, start, ([x, y]) => [x + 1, y - 1]);
   });
 };
@@ -65,31 +60,28 @@ const getUpRightDiagonals = (
 const getDownRightDiagonals = (
   rows: string[],
 ): string[] => {
-  const [width, height] = getDimensions(rows);
+  const size = getGridSize(rows);
 
-  const firstColumn: Coordinate[] = [];
-  for (let y = 0; y < height; y++) {
-    firstColumn.push([0, y]);
+  const startingPoints: Point[] = [];
+  for (let y = 0; y < size; y++) {
+    startingPoints.push([0, y]);
   }
 
-  const firstRow: Coordinate[] = [];
-  for (let x = 1; x < width; x++) {
-    firstRow.push([x, 0]);
+  for (let x = 1; x < size; x++) {
+    startingPoints.push([x, 0]);
   }
 
-  const startingCoords = firstColumn.concat(firstRow);
-
-  return startingCoords.map((start) => {
+  return startingPoints.map((start) => {
     return walkGrid(rows, start, ([x, y]) => [x + 1, y + 1]);
   });
 };
 
-const isInBounds =
-  (width: number, height: number) => ([x, y]: Coordinate): boolean => {
-    return x >= 0 && y >= 0 && x < width && y < height;
-  };
+const isInBounds = (rows: string[], [x, y]: Point): boolean => {
+  const size = getGridSize(rows);
+  return x >= 0 && y >= 0 && x < size && y < size;
+};
 
-const getCharAtCoord = (rows: string[]) => ([x, y]: Coordinate) => {
+const getCharAtPoint = (rows: string[]) => ([x, y]: Point) => {
   return rows[y][x];
 };
 
@@ -139,8 +131,8 @@ export const countGridOccurrences = (
   return countOccurrencesBothWays(target, superstring);
 };
 
-const getCross = (rows: string[], centre: Coordinate) => {
-  const getChar = getCharAtCoord(rows);
+const getCross = (rows: string[], centre: Point) => {
+  const getChar = getCharAtPoint(rows);
 
   const centreChar = getChar(centre);
 
@@ -153,7 +145,7 @@ const getCross = (rows: string[], centre: Coordinate) => {
 
 const sum = (numbers: number[]) => numbers.reduce((sum, n) => sum + n, 0);
 
-const checkForCrossMAS = (rows: string[], coord: Coordinate): boolean => {
+const checkForCrossMAS = (rows: string[], coord: Point): boolean => {
   const cross = getCross(rows, coord);
 
   const counts = cross
@@ -162,16 +154,14 @@ const checkForCrossMAS = (rows: string[], coord: Coordinate): boolean => {
   return sum(counts) === 2;
 };
 
-const getDimensions = (rows: string[]): [width: number, height: number] => {
-  return [rows[0].length, rows.length];
-};
+const getGridSize = (rows: string[]) => rows.length;
 
 export const countCrossMASOccurrences = (rows: string[]): number => {
-  const [width, height] = getDimensions(rows);
+  const size = getGridSize(rows);
 
   let count = 0;
-  for (let y = 1; y < height - 1; y++) {
-    for (let x = 1; x < width - 1; x++) {
+  for (let y = 1; y < size - 1; y++) {
+    for (let x = 1; x < size - 1; x++) {
       if (rows[y][x] === 'A') {
         if (checkForCrossMAS(rows, [x, y])) count++;
       }
