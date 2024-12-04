@@ -1,8 +1,8 @@
-export const getColumns = (rows: string[]): string[] => {
+const countOccurrencesInColumns = (rows: string[], target: string): number => {
   const getChar = getCharAtPoint(rows);
   const size = getGridSize(rows);
 
-  const columns: string[] = [];
+  let count = 0;
   for (let x = 0; x < size; x++) {
     let column = '';
     for (let y = 0; y < size; y++) {
@@ -11,10 +11,14 @@ export const getColumns = (rows: string[]): string[] => {
       column += char;
     }
 
-    columns.push(column);
+    count += countOccurrencesBothWays(target, column);
   }
 
-  return columns;
+  return count;
+};
+
+const countOccurrencesInRows = (rows: string[], target: string): number => {
+  return sum(rows.map((row) => countOccurrencesBothWays(target, row)));
 };
 
 type Translation = (point: Point) => Point;
@@ -36,10 +40,16 @@ const walkGrid = (
   return path;
 };
 
+const countOccurrencesInDiagonals = (rows: string[], target: string) => {
+  return getUpRightDiagonals(rows, target) +
+    getDownRightDiagonals(rows, target);
+};
+
 type Point = [X: number, Y: number];
 const getUpRightDiagonals = (
   rows: string[],
-): string[] => {
+  target: string,
+): number => {
   const size = getGridSize(rows);
 
   const startingPoints: Point[] = [];
@@ -51,14 +61,19 @@ const getUpRightDiagonals = (
     startingPoints.push([x, size - 1]);
   }
 
-  return startingPoints.map((start) => {
-    return walkGrid(rows, start, ([x, y]) => [x + 1, y - 1]);
+  const counts = startingPoints.map((start) => {
+    const path = walkGrid(rows, start, ([x, y]) => [x + 1, y - 1]);
+
+    return countOccurrencesBothWays(target, path);
   });
+
+  return sum(counts);
 };
 
 const getDownRightDiagonals = (
   rows: string[],
-): string[] => {
+  target: string,
+): number => {
   const size = getGridSize(rows);
 
   const startingPoints: Point[] = [];
@@ -70,9 +85,13 @@ const getDownRightDiagonals = (
     startingPoints.push([x, 0]);
   }
 
-  return startingPoints.map((start) => {
-    return walkGrid(rows, start, ([x, y]) => [x + 1, y + 1]);
+  const counts = startingPoints.map((start) => {
+    const path = walkGrid(rows, start, ([x, y]) => [x + 1, y + 1]);
+
+    return countOccurrencesBothWays(target, path);
   });
+
+  return sum(counts);
 };
 
 const isInBounds = (rows: string[], [x, y]: Point): boolean => {
@@ -82,13 +101,6 @@ const isInBounds = (rows: string[], [x, y]: Point): boolean => {
 
 const getCharAtPoint = (rows: string[]) => ([x, y]: Point) => {
   return rows[y][x];
-};
-
-export const getDiagonals = (rows: string[]): string[] => {
-  return [
-    ...getUpRightDiagonals(rows),
-    ...getDownRightDiagonals(rows),
-  ];
 };
 
 const reverseString = (input: string): string => {
@@ -115,19 +127,11 @@ export const countGridOccurrences = (
   target: string,
   rows: string[],
 ): number => {
-  const columns = getColumns(rows);
+  const rowCount = countOccurrencesInRows(rows, target);
+  const columnCount = countOccurrencesInColumns(rows, target);
+  const diagonalsCount = countOccurrencesInDiagonals(rows, target);
 
-  const diagonals = getDiagonals(rows);
-
-  const allRows = [
-    ...rows,
-    ...columns,
-    ...diagonals,
-  ];
-
-  const superstring = allRows.join(';');
-
-  return countOccurrencesBothWays(target, superstring);
+  return rowCount + columnCount + diagonalsCount;
 };
 
 const getCross = (rows: string[], centre: Point) => {

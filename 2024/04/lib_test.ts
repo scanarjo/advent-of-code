@@ -1,40 +1,7 @@
-import { assertArrayIncludes, assertEquals } from '@std/assert';
+import { assertEquals } from '@std/assert';
 
 import { splitIntoLines } from '../utils.ts';
-import {
-  countCrossMASOccurrences,
-  countGridOccurrences,
-  getColumns,
-  getDiagonals,
-} from './lib.ts';
-
-Deno.test('getColumns', async (t) => {
-  await t.step('it should get the correct columns from a set of rows', () => {
-    assertEquals(getColumns(['ABC', 'DEF', 'GHI']), ['ADG', 'BEH', 'CFI']);
-  });
-});
-
-Deno.test('getDiagonals', async (t) => {
-  await t.step('it should get the diagonals from left-to-right', () => {
-    const diagonals = getDiagonals(['ABC', 'DEF', 'GHI']);
-
-    const expected = [
-      'G',
-      'DH',
-      'AEI',
-      'BF',
-      'C',
-      'A',
-      'DB',
-      'GEC',
-      'HF',
-      'I',
-    ];
-
-    assertArrayIncludes(diagonals, expected);
-    assertEquals(diagonals.length, expected.length);
-  });
-});
+import { countCrossMASOccurrences, countGridOccurrences } from './lib.ts';
 
 const sample = `
 MMMSXXMASM
@@ -49,13 +16,13 @@ MAMMMXMMMM
 MXMXAXMASX
 `;
 
+const lines = splitIntoLines(sample);
+
 Deno.test('countGridOccurrences', async (t) => {
   await t.step(
     'it should count all occurrences of the target word in the grid',
     () => {
-      const rows = splitIntoLines(sample);
-
-      assertEquals(countGridOccurrences('XMAS', rows), 18);
+      assertEquals(countGridOccurrences('XMAS', lines), 18);
     },
   );
 });
@@ -64,9 +31,7 @@ Deno.test('countCrossMASOccurrences', async (t) => {
   await t.step(
     'it should correctly count the occurrences in the sample',
     () => {
-      const rows = splitIntoLines(sample);
-
-      assertEquals(countCrossMASOccurrences(rows), 9);
+      assertEquals(countCrossMASOccurrences(lines), 9);
     },
   );
 });
