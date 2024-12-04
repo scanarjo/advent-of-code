@@ -108,16 +108,20 @@ const reverseString = (input: string): string => {
   return input.split('').toReversed().join('');
 };
 
-const countMatches = (regex: RegExp, text: string): number => {
-  return text.matchAll(regex).toArray().length;
+const countMatches = (target: string, text: string): number => {
+  let index = text.indexOf(target, 0);
+
+  let matches = 0;
+  while (index !== -1) {
+    matches++;
+    index = text.indexOf(target, index + target.length - 1);
+  }
+
+  return matches;
 };
 
-const countOccurencesBothWays = (target: string, text: string) => {
-  const reversed = reverseString(text);
-
-  const regex = new RegExp(target, 'g');
-
-  return countMatches(regex, text) + countMatches(regex, reversed);
+const countOccurrencesBothWays = (target: string, text: string) => {
+  return countMatches(target, text) + countMatches(reverseString(target), text);
 };
 
 export const countGridOccurrences = (
@@ -134,9 +138,9 @@ export const countGridOccurrences = (
     ...diagonals,
   ];
 
-  return allRows
-    .map((row) => countOccurencesBothWays(target, row))
-    .reduce((sum, n) => sum + n, 0);
+  const superstring = allRows.join(';');
+
+  return countOccurrencesBothWays(target, superstring);
 };
 
 const getCross = (rows: string[], centre: Coordinate) => {
@@ -157,7 +161,7 @@ const checkForCrossMAS = (rows: string[], coord: Coordinate): boolean => {
   const cross = getCross(rows, coord);
 
   const counts = cross
-    .map((diagonal) => countOccurencesBothWays('MAS', diagonal));
+    .map((diagonal) => countOccurrencesBothWays('MAS', diagonal));
 
   return sum(counts) === 2;
 };
