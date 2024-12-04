@@ -1,12 +1,9 @@
+import { fetchPuzzleInput } from '../utils.ts';
 import { listDistance, listSimilarity, parseData } from './lib.ts';
 
-const decoder = new TextDecoder('utf-8');
+const input = await fetchPuzzleInput(2024, 1);
 
-const buffer = Deno.readFileSync('./input.txt');
-
-const text = decoder.decode(buffer);
-
-const [listA, listB] = parseData(text);
+const [listA, listB] = parseData(input);
 
 const distance = listDistance(listA, listB);
 
