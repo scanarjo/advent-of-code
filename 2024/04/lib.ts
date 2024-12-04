@@ -20,26 +20,29 @@ export const getColumns = (rows: string[]): string[] => {
 
 type Translation = (coord: Coordinate) => Coordinate;
 
-const createCoordGenerator = (getNextCoord: Translation) =>
-  function* (start: Coordinate, width: number, height: number) {
-    const inBounds = isInBounds(width, height);
+const createGridTraverser = (rows: string[], getNextCoord: Translation) => {
+  const getChar = getCharAtCoord(rows);
 
+  const [width, height] = getDimensions(rows);
+
+  const inBounds = isInBounds(width, height);
+
+  return function* (start: Coordinate) {
     let coord = start;
     while (inBounds(coord)) {
-      yield coord;
+      yield getChar(coord);
 
       coord = getNextCoord(coord);
     }
   };
-
-const upRightDiagonal = createCoordGenerator(([x, y]) => [x + 1, y - 1]);
-const downRightDiagonal = createCoordGenerator(([x, y]) => [x + 1, y + 1]);
+};
 
 type Coordinate = [X: number, Y: number];
 const getUpRightDiagonals = (
-  width: number,
-  height: number,
-): Coordinate[][] => {
+  rows: string[],
+): string[] => {
+  const [width, height] = getDimensions(rows);
+
   const firstColumn: Coordinate[] = [];
   for (let y = 0; y < height; y++) {
     firstColumn.push([0, y]);
@@ -52,15 +55,21 @@ const getUpRightDiagonals = (
 
   const startingCoords = firstColumn.concat(lastRow);
 
-  return startingCoords.map((coord) => {
-    return [...upRightDiagonal(coord, width, height)];
+  const upRightGenerator = createGridTraverser(
+    rows,
+    ([x, y]) => [x + 1, y - 1],
+  );
+
+  return startingCoords.map((start) => {
+    return [...upRightGenerator(start)].join('');
   });
 };
 
 const getDownRightDiagonals = (
-  width: number,
-  height: number,
-): Coordinate[][] => {
+  rows: string[],
+): string[] => {
+  const [width, height] = getDimensions(rows);
+
   const firstColumn: Coordinate[] = [];
   for (let y = 0; y < height; y++) {
     firstColumn.push([0, y]);
@@ -73,8 +82,13 @@ const getDownRightDiagonals = (
 
   const startingCoords = firstColumn.concat(firstRow);
 
-  return startingCoords.map((coord) => {
-    return [...downRightDiagonal(coord, width, height)];
+  const downRightGenerator = createGridTraverser(
+    rows,
+    ([x, y]) => [x + 1, y + 1],
+  );
+
+  return startingCoords.map((start) => {
+    return [...downRightGenerator(start)].join('');
   });
 };
 
@@ -88,20 +102,10 @@ const getCharAtCoord = (rows: string[]) => ([x, y]: Coordinate) => {
 };
 
 export const getDiagonals = (rows: string[]): string[] => {
-  const firstRow = rows[0];
-  const width = firstRow.length;
-  const height = rows.length;
-
-  const coords = [
-    ...getUpRightDiagonals(width, height),
-    ...getDownRightDiagonals(width, height),
+  return [
+    ...getUpRightDiagonals(rows),
+    ...getDownRightDiagonals(rows),
   ];
-
-  return coords.map((diagonal) => {
-    const chars = diagonal.map(getCharAtCoord(rows));
-
-    return chars.join('');
-  });
 };
 
 const reverseString = (input: string): string => {
