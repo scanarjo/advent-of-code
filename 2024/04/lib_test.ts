@@ -61,9 +61,12 @@ Deno.test('countGridOccurrences', async (t) => {
 });
 
 Deno.test('countCrossMASOccurrences', async (t) => {
-  await t.step('it should correctly count the occurences in the sample', () => {
-    const rows = splitIntoLines(sample);
+  await t.step(
+    'it should correctly count the occurrences in the sample',
+    () => {
+      const rows = splitIntoLines(sample);
 
-    assertEquals(countCrossMASOccurrences(rows), 9);
-  });
+      assertEquals(countCrossMASOccurrences(rows), 9);
+    },
+  );
 });
