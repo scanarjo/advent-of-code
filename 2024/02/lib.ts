@@ -38,3 +38,6 @@ export const isSafeEnough = (report: Report): boolean => {
 export const parseReport = (report: string): Report => {
   return report.split(' ').map((entry) => parseInt(entry, 10));
 };
+
+export const countResults = (results: boolean[]) =>
+  results.filter(Boolean).length;

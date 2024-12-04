@@ -1,11 +1,9 @@
 import { fetchPuzzleInputLines } from '../utils.ts';
-import { isSafe, isSafeEnough, parseReport } from './lib.ts';
+import { countResults, isSafe, isSafeEnough, parseReport } from './lib.ts';
 
 const lines = await fetchPuzzleInputLines(2024, 2);
 
 const reports = lines.map(parseReport);
-
-const countResults = (results: boolean[]) => results.filter(Boolean).length;
 
 const safeReportCount = countResults(reports.map(isSafe));
 
