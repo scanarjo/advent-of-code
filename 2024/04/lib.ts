@@ -1,21 +1,20 @@
 export const getColumns = (rows: string[]): string[] => {
-  const columns: string[][] = [];
+  const getChar = getCharAtPoint(rows);
+  const size = getGridSize(rows);
 
-  for (let i = 0; i < rows.length; i++) {
-    const row = rows[i];
+  const columns: string[] = [];
+  for (let x = 0; x < size; x++) {
+    let column = '';
+    for (let y = 0; y < size; y++) {
+      const char = getChar([x, y]);
 
-    for (let j = 0; j < row.length; j++) {
-      const char = row[j];
-
-      if (!columns[j]) {
-        columns[j] = [];
-      }
-
-      columns[j].push(char);
+      column += char;
     }
+
+    columns.push(column);
   }
 
-  return columns.map((column) => column.join(''));
+  return columns;
 };
 
 type Translation = (point: Point) => Point;
