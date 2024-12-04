@@ -4,6 +4,27 @@ const splitIntoLines = (text: string): string[] => {
   return text.trimEnd().split(/\r?\n/);
 };
 
+const fetchPuzzleInputFromAOCWebsite = async (
+  year: number,
+  day: number,
+  sessionToken: string,
+) => {
+  const response = await fetch(
+    `https://adventofcode.com/${year}/day/${day}/input`,
+    {
+      headers: {
+        cookie: `session=${sessionToken}`,
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(response.statusText);
+  }
+
+  return response.text();
+};
+
 export const fetchPuzzleInput = async (
   year: number,
   day: number,
@@ -23,22 +44,9 @@ export const fetchPuzzleInput = async (
 
     if (!sessionToken) throw new Error('SESSION variable must be set');
 
-    const response = await fetch(
-      `https://adventofcode.com/${year}/day/${day}/input`,
-      {
-        headers: {
-          cookie: `session=${sessionToken}`,
-        },
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
+    const text = await fetchPuzzleInputFromAOCWebsite(year, day, sessionToken);
 
     console.log('Input fetched from network');
-
-    const text = await response.text();
 
     await Deno.writeTextFile('input.txt', text);
 
