@@ -5,7 +5,7 @@ export const readLinesFromFileBuffer = (buffer: Uint8Array) => {
 
   const text = decoder.decode(buffer);
 
-  return text.split(/[\r\n]+/).filter((line) => line !== '');
+  return text.split(/\r?\n/).filter((line) => line !== '');
 };
 
 export const fetchPuzzleInput = async (
