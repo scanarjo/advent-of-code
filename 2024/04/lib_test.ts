@@ -2,7 +2,7 @@ import { assertArrayIncludes, assertEquals } from '@std/assert';
 
 import { splitIntoLines } from '../utils.ts';
 import {
-  countGridOccurences,
+  countGridOccurrences,
   countOccurences,
   getColumns,
   getDiagonals,
@@ -58,13 +58,13 @@ MAMMMXMMMM
 MXMXAXMASX
 `;
 
-Deno.test('countGridOccurences', async (t) => {
+Deno.test('countGridOccurrences', async (t) => {
   await t.step(
     'it should count all occurrences of the target word in the grid',
     () => {
       const rows = splitIntoLines(sample);
 
-      assertEquals(countGridOccurences('XMAS', rows), 18);
+      assertEquals(countGridOccurrences('XMAS', rows), 18);
     },
   );
 });

@@ -118,7 +118,10 @@ const countOccurencesBothWays = (target: string, text: string) => {
   return countOccurences(target, text) + countOccurences(target, reversed);
 };
 
-export const countGridOccurences = (target: string, rows: string[]): number => {
+export const countGridOccurrences = (
+  target: string,
+  rows: string[],
+): number => {
   const columns = getColumns(rows);
 
   const diagonals = getDiagonals(rows);
