@@ -136,3 +136,30 @@ export const countGridOccurrences = (
     .map((row) => countOccurencesBothWays(target, row))
     .reduce((sum, n) => sum + n, 0);
 };
+
+const checkForCrossMAS = (rows: string[], [x, y]: Coordinate): boolean => {
+  const relevantSquare = rows.slice(y - 1, y + 2).map((row) =>
+    row.slice(x - 1, x + 2)
+  );
+
+  const diagonals = getDiagonals(relevantSquare);
+
+  const count = diagonals.map((diagonal) =>
+    countOccurencesBothWays('MAS', diagonal)
+  ).reduce((sum, n) => sum + n, 0);
+
+  return count === 2;
+};
+
+export const countCrossMASOccurrences = (rows: string[]): number => {
+  let count = 0;
+  for (let y = 1; y < rows.length - 1; y++) {
+    for (let x = 1; x < rows[0].length - 1; x++) {
+      if (rows[y][x] === 'A') {
+        if (checkForCrossMAS(rows, [x, y])) count++;
+      }
+    }
+  }
+
+  return count;
+};

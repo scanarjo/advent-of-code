@@ -2,6 +2,7 @@ import { assertArrayIncludes, assertEquals } from '@std/assert';
 
 import { splitIntoLines } from '../utils.ts';
 import {
+  countCrossMASOccurrences,
   countGridOccurrences,
   countOccurences,
   getColumns,
@@ -67,4 +68,12 @@ Deno.test('countGridOccurrences', async (t) => {
       assertEquals(countGridOccurrences('XMAS', rows), 18);
     },
   );
+});
+
+Deno.test('countCrossMASOccurrences', async (t) => {
+  await t.step('it should correctly count the occurences in the sample', () => {
+    const rows = splitIntoLines(sample);
+
+    assertEquals(countCrossMASOccurrences(rows), 9);
+  });
 });
