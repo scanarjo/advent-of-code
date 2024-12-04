@@ -20,21 +20,23 @@ export const getColumns = (rows: string[]): string[] => {
 
 type Translation = (coord: Coordinate) => Coordinate;
 
-const createGridTraverser = (rows: string[], getNextCoord: Translation) => {
+const walkGrid = (
+  rows: string[],
+  start: Coordinate,
+  move: Translation,
+): string => {
   const getChar = getCharAtCoord(rows);
-
   const [width, height] = getDimensions(rows);
-
   const inBounds = isInBounds(width, height);
 
-  return function* (start: Coordinate) {
-    let coord = start;
-    while (inBounds(coord)) {
-      yield getChar(coord);
+  let path = '';
+  let coord = start;
+  while (inBounds(coord)) {
+    path += getChar(coord);
+    coord = move(coord);
+  }
 
-      coord = getNextCoord(coord);
-    }
-  };
+  return path;
 };
 
 type Coordinate = [X: number, Y: number];
@@ -55,13 +57,8 @@ const getUpRightDiagonals = (
 
   const startingCoords = firstColumn.concat(lastRow);
 
-  const upRightGenerator = createGridTraverser(
-    rows,
-    ([x, y]) => [x + 1, y - 1],
-  );
-
   return startingCoords.map((start) => {
-    return [...upRightGenerator(start)].join('');
+    return walkGrid(rows, start, ([x, y]) => [x + 1, y - 1]);
   });
 };
 
@@ -82,13 +79,8 @@ const getDownRightDiagonals = (
 
   const startingCoords = firstColumn.concat(firstRow);
 
-  const downRightGenerator = createGridTraverser(
-    rows,
-    ([x, y]) => [x + 1, y + 1],
-  );
-
   return startingCoords.map((start) => {
-    return [...downRightGenerator(start)].join('');
+    return walkGrid(rows, start, ([x, y]) => [x + 1, y + 1]);
   });
 };
 
