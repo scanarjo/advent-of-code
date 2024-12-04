@@ -1,11 +1,7 @@
 import { env } from 'node:process';
 
-export const readLinesFromFileBuffer = (buffer: Uint8Array) => {
-  const decoder = new TextDecoder('utf-8');
-
-  const text = decoder.decode(buffer);
-
-  return text.split(/\r?\n/).filter((line) => line !== '');
+export const splitIntoLines = (text: string): string[] => {
+  return text.trimEnd().split(/\r?\n/);
 };
 
 export const fetchPuzzleInput = async (
@@ -30,4 +26,10 @@ export const fetchPuzzleInput = async (
   }
 
   return response.text();
+};
+
+export const fetchPuzzleInputLines = async (year: number, day: number) => {
+  const input = await fetchPuzzleInput(year, day);
+
+  return splitIntoLines(input);
 };

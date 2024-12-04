@@ -1,13 +1,7 @@
-import { Buffer } from 'node:buffer';
-
-import { fetchPuzzleInput, readLinesFromFileBuffer } from '../utils.ts';
+import { fetchPuzzleInputLines } from '../utils.ts';
 import { isSafe, isSafeEnough, parseReport } from './lib.ts';
 
-const input = await fetchPuzzleInput(2024, 2);
-
-const buffer = Buffer.from(input);
-
-const lines = readLinesFromFileBuffer(buffer);
+const lines = await fetchPuzzleInputLines(2024, 2);
 
 const reports = lines.map(parseReport);
 
