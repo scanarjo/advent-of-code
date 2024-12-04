@@ -1,7 +1,11 @@
-import { readLinesFromFileBuffer } from '../utils.ts';
+import { Buffer } from 'node:buffer';
+
+import { fetchPuzzleInput, readLinesFromFileBuffer } from '../utils.ts';
 import { isSafe, isSafeEnough, parseReport } from './lib.ts';
 
-const buffer = Deno.readFileSync('./input.txt');
+const input = await fetchPuzzleInput(2024, 2);
+
+const buffer = Buffer.from(input);
 
 const lines = readLinesFromFileBuffer(buffer);
 
