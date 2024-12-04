@@ -153,6 +153,7 @@ const checkForCrossMAS = (rows: string[], [x, y]: Coordinate): boolean => {
 
 export const countCrossMASOccurrences = (rows: string[]): number => {
   let count = 0;
+
   for (let y = 1; y < rows.length - 1; y++) {
     for (let x = 1; x < rows[0].length - 1; x++) {
       if (rows[y][x] === 'A') {
