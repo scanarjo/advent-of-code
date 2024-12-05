@@ -1,7 +1,7 @@
 import { assertEquals } from '@std/assert';
 
 import { splitIntoLines } from '../utils.ts';
-import { countCrossMASOccurrences, countGridOccurrences } from './lib.ts';
+import { countCrossMASOccurrences, countXMASOccurrences } from './lib.ts';
 
 const sample = `
 MMMSXXMASM
@@ -18,11 +18,11 @@ MXMXAXMASX
 
 const lines = splitIntoLines(sample);
 
-Deno.test('countGridOccurrences', async (t) => {
+Deno.test('countXMASOccurrences', async (t) => {
   await t.step(
     'it should count all occurrences of the target word in the grid',
     () => {
-      assertEquals(countGridOccurrences('XMAS', lines), 18);
+      assertEquals(countXMASOccurrences(lines), 18);
     },
   );
 });

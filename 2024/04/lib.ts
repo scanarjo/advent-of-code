@@ -123,10 +123,11 @@ const countOccurrencesBothWays = (target: string, text: string) => {
   return countMatches(target, text) + countMatches(reverseString(target), text);
 };
 
-export const countGridOccurrences = (
-  target: string,
+export const countXMASOccurrences = (
   rows: string[],
 ): number => {
+  const target = 'XMAS';
+
   const rowCount = countOccurrencesInRows(rows, target);
   const columnCount = countOccurrencesInColumns(rows, target);
   const diagonalsCount = countOccurrencesInDiagonals(rows, target);
