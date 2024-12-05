@@ -113,7 +113,7 @@ const countMatches = (target: string, text: string): number => {
   let matches = 0;
   while (index !== -1) {
     matches++;
-    index = text.indexOf(target, index + target.length - 1);
+    index = text.indexOf(target, index + target.length);
   }
 
   return matches;
