@@ -33,29 +33,75 @@ export const parseInput = (input: string[]) => {
   };
 };
 
+const isUpdateValid = (rules: PrintingRules) => (update: Update): boolean => {
+  const seen = new Set<number>();
+
+  for (const page of update) {
+    const restrictions = rules.get(page);
+
+    if (!restrictions) {
+      seen.add(page);
+      continue;
+    }
+
+    if (!seen.isDisjointFrom(restrictions)) {
+      return false;
+    }
+
+    seen.add(page);
+  }
+
+  return true;
+};
+
 export const validateUpdates = (
   rules: PrintingRules,
   updates: Update[],
 ): Update[] => {
-  return updates.filter((update) => {
-    const seen = new Set<number>();
+  return updates.filter(isUpdateValid(rules));
+};
 
-    for (const page of update) {
+export const getInvalidUpdates = (
+  rules: PrintingRules,
+  updates: Update[],
+): Update[] => {
+  const isValid = isUpdateValid(rules);
+
+  return updates.filter((update) => !isValid(update));
+};
+
+export const fixInvalidUpdates = (
+  rules: PrintingRules,
+  updates: Update[],
+): Update[] => {
+  return updates.map((update) => {
+    let seen: Update = [];
+
+    let page = update.shift();
+    while (page) {
       const restrictions = rules.get(page);
 
       if (!restrictions) {
-        seen.add(page);
+        seen.push(page);
+
+        page = update.shift();
         continue;
       }
 
-      if (!seen.isDisjointFrom(restrictions)) {
-        return false;
+      if (!restrictions.isDisjointFrom(new Set(seen))) {
+        update.unshift(...seen);
+
+        seen = [];
+
+        continue;
       }
 
-      seen.add(page);
+      seen.push(page);
+
+      page = update.shift();
     }
 
-    return true;
+    return seen;
   });
 };
 

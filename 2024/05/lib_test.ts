@@ -1,7 +1,13 @@
 import { assertEquals } from '@std/assert/equals';
 
 import { splitIntoLines } from '../utils.ts';
-import { calculateUpdatesScore, parseInput, validateUpdates } from './lib.ts';
+import {
+  calculateUpdatesScore,
+  fixInvalidUpdates,
+  getInvalidUpdates,
+  parseInput,
+  validateUpdates,
+} from './lib.ts';
 
 const sample = `
 29|13
@@ -52,7 +58,7 @@ Deno.test('parseInput', async (t) => {
   });
 });
 
-Deno.test('sanitizeUpdates', async (t) => {
+Deno.test('validateUpdates', async (t) => {
   await t.step('it should identify the valid updates correctly', () => {
     const input = splitIntoLines(sample);
 
@@ -80,4 +86,28 @@ Deno.test('calculateUpdatesScore', async (t) => {
       );
     },
   );
+});
+
+Deno.test('fixInvalidUpdates', async (t) => {
+  await t.step('it should produce a set of valid updates', () => {
+    const input = splitIntoLines(sample);
+
+    const { rules, updates } = parseInput(input);
+
+    const invalidUpdates = getInvalidUpdates(rules, updates);
+
+    assertEquals(invalidUpdates, [
+      [75, 97, 47, 61, 53],
+      [61, 13, 29],
+      [97, 13, 75, 29, 47],
+    ]);
+
+    const fixed = fixInvalidUpdates(rules, invalidUpdates);
+
+    assertEquals(fixed, [
+      [97, 75, 47, 61, 53],
+      [61, 29, 13],
+      [97, 75, 47, 29, 13],
+    ]);
+  });
 });
