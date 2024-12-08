@@ -1,3 +1,5 @@
+import { getCharAtPoint, getGridSize, Point, walkGrid } from '../grids.ts';
+
 const countOccurrencesInColumns = (rows: string[], target: string): number => {
   const getChar = getCharAtPoint(rows);
   const size = getGridSize(rows);
@@ -21,31 +23,11 @@ const countOccurrencesInRows = (rows: string[], target: string): number => {
   return sum(rows.map((row) => countOccurrencesBothWays(target, row)));
 };
 
-type Translation = (point: Point) => Point;
-
-const walkGrid = (
-  rows: string[],
-  start: Point,
-  move: Translation,
-): string => {
-  const getChar = getCharAtPoint(rows);
-
-  let path = '';
-  let point = start;
-  while (isInBounds(rows, point)) {
-    path += getChar(point);
-    point = move(point);
-  }
-
-  return path;
-};
-
 const countOccurrencesInDiagonals = (rows: string[], target: string) => {
   return getUpRightDiagonals(rows, target) +
     getDownRightDiagonals(rows, target);
 };
 
-type Point = [X: number, Y: number];
 const getUpRightDiagonals = (
   rows: string[],
   target: string,
@@ -92,15 +74,6 @@ const getDownRightDiagonals = (
   });
 
   return sum(counts);
-};
-
-const isInBounds = (rows: string[], [x, y]: Point): boolean => {
-  const size = getGridSize(rows);
-  return x >= 0 && y >= 0 && x < size && y < size;
-};
-
-const getCharAtPoint = (rows: string[]) => ([x, y]: Point) => {
-  return rows[y][x];
 };
 
 const reverseString = (input: string): string => {
@@ -157,8 +130,6 @@ const checkForCrossMAS = (rows: string[], coord: Point): boolean => {
 
   return sum(counts) === 2;
 };
-
-const getGridSize = (rows: string[]) => rows.length;
 
 export const countCrossMASOccurrences = (rows: string[]): number => {
   const size = getGridSize(rows);
