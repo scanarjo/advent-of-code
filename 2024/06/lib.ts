@@ -32,11 +32,11 @@ const patrol = [
   possibleMoves.LEFT,
 ];
 
-export const countVisited = (grid: Grid): number => {
+const getVisited = (grid: Grid): Point[] => {
   const start = findStart(grid);
 
   if (!start) {
-    return 0;
+    return [];
   }
 
   let currentHeading = 0;
@@ -54,6 +54,47 @@ export const countVisited = (grid: Grid): number => {
   };
 
   const path = traverseGrid(grid, start, move);
+
+  return path;
+};
+
+const groupByRow = (points: Point[]): Point[][] => {
+  const groupedPoints: Point[][] = [];
+  for (const [x, y] of points) {
+    if (!groupedPoints[y]) {
+      groupedPoints[y] = [];
+    }
+
+    groupedPoints[y].push([x, y]);
+  }
+
+  return groupedPoints;
+};
+
+export const printVisited = (grid: Grid): void => {
+  const visited = getVisited(grid);
+
+  const groupedPoints = groupByRow(visited);
+
+  const mapped = grid.map((row, y) => {
+    const visitedOnRow = groupedPoints.at(y);
+
+    if (!visitedOnRow) return row;
+
+    return row.split('').map((char, x) => {
+      const found = visitedOnRow.find(([xVisited]) => xVisited === x);
+
+      if (found && char === '.') return 'X';
+
+      return char;
+    }).join('');
+  });
+
+  console.log(mapped.join('\n'));
+};
+
+export const countVisited = (grid: Grid): number => {
+  const path = getVisited(grid);
 
   const visited = new Set(path.map(([x, y]) => {
     return `${x},${y}`;
