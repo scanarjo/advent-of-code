@@ -20,10 +20,6 @@ function parseInstruction(
   return [direction, amount];
 }
 
-function inRange(target: number, min: number, max: number) {
-  return target >= min && target < max;
-}
-
 export function rotateDial(
   startPos: number,
   instruction: string,
