@@ -11,16 +11,16 @@ let passedZeroCount = 0;
 
 let pos = startPos;
 for (let instruction of lines) {
-  const { finalPosition: newPos, zeroClicks: timesPassedZero } = rotateDial(
+  const { finalPosition, zeroClicks } = rotateDial(
     pos,
     instruction,
   );
 
-  passedZeroCount += timesPassedZero;
+  passedZeroCount += zeroClicks;
 
-  if (newPos === 0) landedOnZeroCount += 1;
+  if (finalPosition === 0) landedOnZeroCount += 1;
 
-  pos = newPos;
+  pos = finalPosition;
 }
 
 console.log("Password in Part 1:", landedOnZeroCount);
