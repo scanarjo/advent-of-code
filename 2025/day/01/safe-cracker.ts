@@ -10,13 +10,25 @@ interface RotationResult {
   zeroClicks: number;
 }
 
+function parseInstruction(
+  instruction: string,
+): [direction: "L" | "R", amount: number] {
+  const direction = instruction.at(0) === "L" ? "L" : "R";
+
+  const amount = Number.parseInt(instruction.slice(1), 10);
+
+  return [direction, amount];
+}
+
+function inRange(target: number, min: number, max: number) {
+  return target >= min && target < max;
+}
+
 export function rotateDial(
   startPos: number,
   instruction: string,
 ): RotationResult {
-  const direction = instruction.at(0) === "L" ? -1 : 1;
-
-  const amount = Number.parseInt(instruction.slice(1), 10);
+  const [direction, amount] = parseInstruction(instruction);
 
   if (amount === 0) {
     return {
@@ -25,7 +37,7 @@ export function rotateDial(
     };
   }
 
-  const offset = direction * amount;
+  const offset = direction === "R" ? amount : amount * -1;
 
   const wholeTurns = Math.floor(Math.abs(offset / DIAL_MODULUS));
 
@@ -36,7 +48,7 @@ export function rotateDial(
   let zeroClicks = wholeTurns;
 
   if (remainingOffset !== 0 && startPos !== 0) {
-    if (rawNewPos <= 0 || rawNewPos > 99) zeroClicks += 1;
+    if (rawNewPos <= 0 || rawNewPos > DIAL_MAX) zeroClicks += 1;
   }
 
   const finalPosition = modulo(rawNewPos, DIAL_MODULUS);
