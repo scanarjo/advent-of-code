@@ -1,3 +1,5 @@
+import { rotateDial } from "./safe-cracker";
+
 const inputFile = Bun.file("input");
 
 const fileContents = await inputFile.text();
@@ -9,18 +11,22 @@ lines.pop();
 
 const startPos = 50;
 
-let count = 0;
+let landedOnZeroCount = 0;
+let passedZeroCount = 0;
+
 let pos = startPos;
 for (let instruction of lines) {
-  const direction = instruction.at(0) === "L" ? -1 : 1;
+  const { finalPosition: newPos, zeroClicks: timesPassedZero } = rotateDial(
+    pos,
+    instruction,
+  );
 
-  const amount = Number.parseInt(instruction.slice(1), 10);
+  passedZeroCount += timesPassedZero;
 
-  pos = (100 + pos + (direction * amount)) % 100;
+  if (newPos === 0) landedOnZeroCount += 1;
 
-  console.log(pos);
-
-  if (pos === 0) count += 1;
+  pos = newPos;
 }
 
-console.log("Passord:", count);
+console.log("Password in Part 1:", landedOnZeroCount);
+console.log("Password in Part 2:", passedZeroCount);
