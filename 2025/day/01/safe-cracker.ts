@@ -20,6 +20,14 @@ function parseInstruction(
   return [direction, amount];
 }
 
+function isInRange(min: number, max: number, target: number) {
+  return target >= min && target < max;
+}
+
+function quotient(dividend: number, divisor: number): number {
+  return Math.floor(Math.abs(dividend / divisor));
+}
+
 export function rotateDial(
   startPos: number,
   instruction: string,
@@ -33,21 +41,23 @@ export function rotateDial(
     };
   }
 
+  const wholeTurns = quotient(amount, DIAL_MODULUS);
+
+  const remainder = amount % DIAL_MODULUS;
+
   const offset = direction === "R" ? amount : amount * -1;
-
-  const wholeTurns = Math.floor(Math.abs(offset / DIAL_MODULUS));
-
-  const remainingOffset = offset % DIAL_MODULUS;
-
-  const rawNewPos = startPos + remainingOffset;
 
   let zeroClicks = wholeTurns;
 
-  if (remainingOffset !== 0 && startPos !== 0) {
-    if (rawNewPos <= 0 || rawNewPos > DIAL_MAX) zeroClicks += 1;
+  if (direction === "R") {
+    if (isInRange(startPos, startPos + remainder, DIAL_MAX)) {
+      zeroClicks += 1;
+    }
+  } else {
+    if (isInRange(startPos - remainder, startPos, 0)) zeroClicks += 1;
   }
 
-  const finalPosition = modulo(rawNewPos, DIAL_MODULUS);
+  const finalPosition = modulo(startPos + offset, DIAL_MODULUS);
 
   return {
     finalPosition,
