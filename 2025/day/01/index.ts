@@ -1,13 +1,8 @@
 import { rotateDial } from "./safe-cracker";
 
-const inputFile = Bun.file("input");
+import { readLinesFromFile } from "utils";
 
-const fileContents = await inputFile.text();
-
-const lines = await fileContents.split(/[\r\n]/);
-
-// Remove empty element
-lines.pop();
+const lines = await readLinesFromFile("input");
 
 const startPos = 50;
 
