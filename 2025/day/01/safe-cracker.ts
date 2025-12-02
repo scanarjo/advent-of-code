@@ -41,14 +41,13 @@ export function rotateDial(
     };
   }
 
-  const wholeTurns = quotient(amount, DIAL_MODULUS);
+  const offset = direction === "R" ? amount : DIAL_MODULUS - amount;
+
+  const finalPosition = modulo(startPos + offset, DIAL_MODULUS);
 
   const remainder = amount % DIAL_MODULUS;
 
-  const offset = direction === "R" ? amount : amount * -1;
-
-  let zeroClicks = wholeTurns;
-
+  let zeroClicks = quotient(amount, DIAL_MODULUS);
   if (direction === "R") {
     if (isInRange(startPos, startPos + remainder, DIAL_MAX)) {
       zeroClicks += 1;
@@ -56,8 +55,6 @@ export function rotateDial(
   } else {
     if (isInRange(startPos - remainder, startPos, 0)) zeroClicks += 1;
   }
-
-  const finalPosition = modulo(startPos + offset, DIAL_MODULUS);
 
   return {
     finalPosition,
