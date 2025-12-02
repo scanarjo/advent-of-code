@@ -25,10 +25,6 @@ describe('isValidID', () => {
 });
 
 describe('findInvalidIDsInRange', () => {
-  it('should report the same number of results as there are in the range', () => {
-    expect(findInvalidIDsInRange('11', '22')).toBeArrayOfSize(2);
-  });
-
   it('should correctly identify invalid IDs in the range', () => {
     const result = findInvalidIDsInRange('11', '22');
 
