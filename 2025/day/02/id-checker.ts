@@ -10,16 +10,29 @@ export function isValidID(id: string): boolean {
   return start !== end;
 }
 
+const sequenceCache = new Map<number, number[]>();
+function getValidSequenceLengths(n: number): number[] {
+  const cached = sequenceCache.get(n);
+
+  if (cached) return cached;
+
+  let sequenceLengthsToCheck = [1];
+
+  for (let i = 2; i <= n / 2; i++) {
+    if (Number.isInteger(n / i)) sequenceLengthsToCheck.push(i);
+  }
+
+  sequenceCache.set(n, sequenceLengthsToCheck);
+
+  return sequenceLengthsToCheck;
+}
+
 export function isValidVersion2ID(id: string): boolean {
   if (id.startsWith('0')) return false;
 
   if (id.length < 2) return true;
 
-  let sequenceLengthsToCheck = [1];
-
-  for (let n = 2; n <= id.length / 2; n++) {
-    if (Number.isInteger(id.length / n)) sequenceLengthsToCheck.push(n);
-  }
+  let sequenceLengthsToCheck = getValidSequenceLengths(id.length);
 
   for (const n of sequenceLengthsToCheck) {
     const seq = id.slice(0, n);
