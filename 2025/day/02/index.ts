@@ -16,12 +16,12 @@ for (const range of ranges) {
 }
 console.log('Total of invalid IDs in part 1:', part1Total);
 
-let invalidIDs = new Set<number>();
+let invalidIDs = <number[]>[];
 for (const range of ranges) {
   const [start, end] = range.split('-');
 
   findInvalidIDsInRange(start!, end!, isValidVersion2ID).forEach((id) =>
-    invalidIDs.add(id)
+    invalidIDs.push(id)
   );
 }
 
