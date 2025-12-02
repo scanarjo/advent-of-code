@@ -37,15 +37,12 @@ export function isValidVersion2ID(id: string): boolean {
   for (const n of sequenceLengthsToCheck) {
     const seq = id.slice(0, n);
 
-    let slices = [];
     for (let i = n; i + n < id.length + 1; i += n) {
       const slice = id.slice(i, i + n);
 
-      slices.push(slice);
-    }
+      if (slice !== seq) break;
 
-    if (slices.every((slice) => slice === seq)) {
-      return false;
+      if (i + n === id.length) return false;
     }
   }
 
