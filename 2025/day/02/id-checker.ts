@@ -13,6 +13,8 @@ export function isValidID(id: string): boolean {
 export function isValidVersion2ID(id: string): boolean {
   if (id.startsWith('0')) return false;
 
+  if (id.length < 2) return true;
+
   let sequenceLengthsToCheck = [1];
 
   for (let n = 2; n <= id.length / 2; n++) {

@@ -14,6 +14,7 @@ for (const range of ranges) {
     part1Total += n;
   });
 }
+console.log('Total of invalid IDs in part 1:', part1Total);
 
 let invalidIDs = new Set<number>();
 for (const range of ranges) {
@@ -24,10 +25,6 @@ for (const range of ranges) {
   );
 }
 
-console.log(ranges);
-
 let part2Total = 0;
 invalidIDs.forEach((id) => (part2Total += id));
-
-console.log('Total of invalid IDs in part 1:', part1Total);
 console.log('Total of invalid IDs in part 2:', part2Total);

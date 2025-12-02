@@ -52,4 +52,8 @@ describe('isValidVersion2ID', () => {
   it('should identify "12" as valid', () => {
     expect(isValidVersion2ID('12')).toBe(true);
   });
+
+  it('should identify "2" as valid', () => {
+    expect(isValidVersion2ID('2')).toBe(true);
+  });
 });
