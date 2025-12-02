@@ -16,15 +16,13 @@ for (const range of ranges) {
 }
 console.log('Total of invalid IDs in part 1:', part1Total);
 
-let invalidIDs = <number[]>[];
+let part2Total = 0;
 for (const range of ranges) {
   const [start, end] = range.split('-');
 
-  findInvalidIDsInRange(start!, end!, isValidVersion2ID).forEach((id) =>
-    invalidIDs.push(id)
+  findInvalidIDsInRange(start!, end!, isValidVersion2ID).forEach(
+    (id) => (part2Total += id)
   );
 }
 
-let part2Total = 0;
-invalidIDs.forEach((id) => (part2Total += id));
 console.log('Total of invalid IDs in part 2:', part2Total);
