@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'bun:test';
 
-import { findInvalidIDsInRange, isValidID } from './id-checker';
+import {
+  findInvalidIDsInRange,
+  isValidID,
+  isValidVersion2ID,
+} from './id-checker';
 
 describe('isValidID', () => {
   it('should report "0101" as invalid due to the leading 0', () => {
@@ -29,5 +33,23 @@ describe('findInvalidIDsInRange', () => {
     const result = findInvalidIDsInRange('11', '22');
 
     expect(result).toEqual([11, 22]);
+  });
+});
+
+describe('isValidVersion2ID', () => {
+  it('should identify "111" as invalid', () => {
+    expect(isValidVersion2ID('111')).toBe(false);
+  });
+
+  it('should identify "101" as valid', () => {
+    expect(isValidVersion2ID('101')).toBe(true);
+  });
+
+  it('should identify "1010" as invalid', () => {
+    expect(isValidVersion2ID('1010')).toBe(false);
+  });
+
+  it('should identify "12" as valid', () => {
+    expect(isValidVersion2ID('12')).toBe(true);
   });
 });
