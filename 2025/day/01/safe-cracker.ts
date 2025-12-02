@@ -12,8 +12,8 @@ interface RotationResult {
 
 function parseInstruction(
   instruction: string,
-): [direction: "L" | "R", amount: number] {
-  const direction = instruction.at(0) === "L" ? "L" : "R";
+): [direction: 'L' | 'R', amount: number] {
+  const direction = instruction.at(0) === 'L' ? 'L' : 'R';
 
   const amount = Number.parseInt(instruction.slice(1), 10);
 
@@ -41,14 +41,14 @@ export function rotateDial(
     };
   }
 
-  const offset = direction === "R" ? amount : DIAL_MODULUS - amount;
+  const offset = direction === 'R' ? amount : DIAL_MODULUS - amount;
 
   const finalPosition = modulo(startPos + offset, DIAL_MODULUS);
 
   const remainder = amount % DIAL_MODULUS;
 
   let zeroClicks = quotient(amount, DIAL_MODULUS);
-  if (direction === "R") {
+  if (direction === 'R') {
     if (isInRange(startPos, startPos + remainder, DIAL_MAX)) {
       zeroClicks += 1;
     }

@@ -1,8 +1,8 @@
-import { rotateDial } from "./safe-cracker";
+import { rotateDial } from './safe-cracker';
 
-import { readLinesFromFile } from "utils";
+import { readLinesFromFile } from 'utils';
 
-const lines = await readLinesFromFile("input");
+const lines = await readLinesFromFile('input');
 
 const startPos = 50;
 
@@ -11,10 +11,7 @@ let passedZeroCount = 0;
 
 let pos = startPos;
 for (let instruction of lines) {
-  const { finalPosition, zeroClicks } = rotateDial(
-    pos,
-    instruction,
-  );
+  const { finalPosition, zeroClicks } = rotateDial(pos, instruction);
 
   passedZeroCount += zeroClicks;
 
@@ -23,5 +20,5 @@ for (let instruction of lines) {
   pos = finalPosition;
 }
 
-console.log("Password in Part 1:", landedOnZeroCount);
-console.log("Password in Part 2:", passedZeroCount);
+console.log('Password in Part 1:', landedOnZeroCount);
+console.log('Password in Part 2:', passedZeroCount);
