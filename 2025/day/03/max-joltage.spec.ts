@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'bun:test';
-import { findMaxJoltage } from './findMaxJoltage';
+
+import { findMaxJoltage } from './max-joltage';
 
 describe('findMaxJoltage', () => {
   it('should return "98" for "987654321111111"', () => {
