@@ -35,7 +35,6 @@ export function findMaxJoltage(batteryBank: string): number {
     secondBatteryValue = battery;
   }
 
-  console.log(batteryBank, firstBatteryValue * 10 + secondBatteryValue);
   return firstBatteryValue * 10 + secondBatteryValue;
 }
 
