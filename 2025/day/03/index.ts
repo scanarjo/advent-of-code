@@ -6,3 +6,7 @@ const lines = await readLinesFromFile('input.txt');
 const part1Answer = findTotalJoltage(lines);
 
 console.log(`The answer for part 1 is: ${part1Answer}`);
+
+const part2Answer = findTotalJoltage(lines, 12);
+
+console.log(`The answer for part 2 is: ${part2Answer}`);
