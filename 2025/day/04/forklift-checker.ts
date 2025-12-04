@@ -44,7 +44,7 @@ export function countAccessibleRolls(grid: Grid): number {
   return count;
 }
 
-function updateGridInPlace(
+function updateGrid(
   grid: MutGrid,
   [rowIndex, colIndex]: Point,
   char: string
@@ -70,7 +70,7 @@ export function removeAllAccessibleRolls(grid: MutGrid): number {
         isToiletRoll(grid, [rowIndex, colIndex]) &&
         isAccessible(grid, [rowIndex, colIndex])
       ) {
-        updateGridInPlace(grid, [rowIndex, colIndex], '.');
+        updateGrid(grid, [rowIndex, colIndex], '.');
         rollsRemoved++;
         rowUpdated = true;
       }
