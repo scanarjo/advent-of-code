@@ -89,7 +89,7 @@ export function removeAccessibleRolls(grid: string[]): {
 
   let updatedGrid = grid;
   for (const point of rollsFound) {
-    updatedGrid = updateGrid(updatedGrid, point, 'X');
+    updatedGrid = updateGrid(updatedGrid, point, '.');
   }
 
   return {
@@ -111,6 +111,8 @@ export function countAccessibleRollsProgressively(grid: string[]): number {
 
     totalRollsRemoved += rollsRemoved;
   } while (rollsRemoved > 0);
+
+  console.table(currentGrid);
 
   return totalRollsRemoved;
 }
