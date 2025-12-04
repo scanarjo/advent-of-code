@@ -1,7 +1,7 @@
-function isToiletRoll(
-  grid: string[],
-  [rowIndex, colIndex]: [number, number]
-): boolean {
+type Grid = readonly string[];
+type Point = readonly [row: number, column: number];
+
+function isToiletRoll(grid: Grid, [rowIndex, colIndex]: Point): boolean {
   const row = grid[rowIndex];
 
   if (!row) return false;
@@ -9,10 +9,7 @@ function isToiletRoll(
   return row.charAt(colIndex) === '@';
 }
 
-function isAccessible(
-  grid: string[],
-  [row, col]: [row: number, col: number]
-): boolean {
+function isAccessible(grid: Grid, [row, col]: Point): boolean {
   let toiletRollsFound = 0;
 
   for (let rowIndex = row - 1; rowIndex < row + 2; rowIndex++) {
@@ -28,7 +25,7 @@ function isAccessible(
   return toiletRollsFound < 4;
 }
 
-export function countAccessibleRolls(grid: string[]): number {
+export function countAccessibleRolls(grid: Grid): number {
   let count = 0;
   for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
     const row = grid[rowIndex]!;
@@ -47,10 +44,10 @@ export function countAccessibleRolls(grid: string[]): number {
 }
 
 function updateGrid(
-  grid: string[],
-  [rowIndex, colIndex]: [number, number],
+  grid: Grid,
+  [rowIndex, colIndex]: Point,
   char: string
-): string[] {
+): Grid {
   const row = grid[rowIndex];
 
   if (!row) return grid;
@@ -67,12 +64,14 @@ function updateGrid(
   return newGrid;
 }
 
-export function removeAccessibleRolls(grid: string[]): {
-  updatedGrid: string[];
+interface RemoveAccessibleRollsResult {
+  updatedGrid: Grid;
   rollsRemoved: number;
-} {
+}
+
+export function removeAccessibleRolls(grid: Grid): RemoveAccessibleRollsResult {
   let rollsRemoved = 0;
-  let rollsFound = <[number, number][]>[];
+  let rollsFound = <Point[]>[];
   for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
     const row = grid[rowIndex]!;
 
@@ -98,7 +97,7 @@ export function removeAccessibleRolls(grid: string[]): {
   };
 }
 
-export function countAccessibleRollsProgressively(grid: string[]): number {
+export function countAccessibleRollsProgressively(grid: Grid): number {
   let totalRollsRemoved = 0;
   let rollsRemoved = 0;
   let currentGrid = grid;
