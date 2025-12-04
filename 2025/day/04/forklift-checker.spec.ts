@@ -3,7 +3,7 @@ import { readLinesFromFile } from 'utils';
 
 import {
   countAccessibleRolls,
-  countAccessibleRollsProgressively,
+  removeAllAccessibleRolls,
 } from './forklift-checker';
 
 const sampleData = await readLinesFromFile(__dirname + '/sample.txt');
@@ -20,6 +20,6 @@ describe('countAccessibleRolls', () => {
 
 describe('countAccessibleRollsProgressively', () => {
   it('should correctly count the accessible rolls with successive passes for the sample data', () => {
-    expect(countAccessibleRollsProgressively(sampleData)).toBe(43);
+    expect(removeAllAccessibleRolls(sampleData)).toBe(43);
   });
 });

@@ -59,23 +59,7 @@ function updateGridInPlace(
   grid[rowIndex] = `${before}${char}${after}`;
 }
 
-function updateGrid(
-  grid: Grid,
-  [rowIndex, colIndex]: Point,
-  char: string
-): Grid {
-  const row = grid[rowIndex];
-
-  if (!row) return grid;
-
-  const newGrid = [...grid];
-
-  updateGridInPlace(newGrid, [rowIndex, colIndex], char);
-
-  return newGrid;
-}
-
-export function removeAccessibleRolls(grid: MutGrid): number {
+export function removeAllAccessibleRolls(grid: MutGrid): number {
   let rollsRemoved = 0;
   for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
     let rowUpdated = false;
@@ -95,13 +79,7 @@ export function removeAccessibleRolls(grid: MutGrid): number {
     if (rowUpdated) rowIndex = Math.max(rowIndex - 2, -1);
   }
 
-  return rollsRemoved;
-}
-
-export function countAccessibleRollsProgressively(grid: MutGrid): number {
-  const result = removeAccessibleRolls(grid);
-
   console.table(grid);
 
-  return result;
+  return rollsRemoved;
 }
