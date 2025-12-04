@@ -52,7 +52,7 @@ function updateGrid(
 
   if (!row) return grid;
 
-  const before = colIndex > 0 ? row.slice(0, colIndex) : '';
+  const before = row.slice(0, colIndex);
   const after = row.slice(colIndex + 1);
 
   const newRow = `${before}${char}${after}`;
