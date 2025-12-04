@@ -55,11 +55,9 @@ function updateGrid(
   const before = row.slice(0, colIndex);
   const after = row.slice(colIndex + 1);
 
-  const newRow = `${before}${char}${after}`;
-
   const newGrid = [...grid];
 
-  newGrid[rowIndex] = newRow;
+  newGrid[rowIndex] = `${before}${char}${after}`;
 
   return newGrid;
 }
