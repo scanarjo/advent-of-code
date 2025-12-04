@@ -1,4 +1,5 @@
 type Grid = readonly string[];
+type MutGrid = string[];
 type Point = readonly [row: number, column: number];
 
 function isToiletRoll(grid: Grid, [rowIndex, colIndex]: Point): boolean {
@@ -43,6 +44,21 @@ export function countAccessibleRolls(grid: Grid): number {
   return count;
 }
 
+function updateGridInPlace(
+  grid: MutGrid,
+  [rowIndex, colIndex]: Point,
+  char: string
+): void {
+  const row = grid[rowIndex];
+
+  if (!row) return;
+
+  const before = row.slice(0, colIndex);
+  const after = row.slice(colIndex + 1);
+
+  grid[rowIndex] = `${before}${char}${after}`;
+}
+
 function updateGrid(
   grid: Grid,
   [rowIndex, colIndex]: Point,
@@ -52,34 +68,25 @@ function updateGrid(
 
   if (!row) return grid;
 
-  const before = row.slice(0, colIndex);
-  const after = row.slice(colIndex + 1);
-
   const newGrid = [...grid];
 
-  newGrid[rowIndex] = `${before}${char}${after}`;
+  updateGridInPlace(newGrid, [rowIndex, colIndex], char);
 
   return newGrid;
 }
 
-interface RemoveAccessibleRollsResult {
-  updatedGrid: Grid;
-  rollsRemoved: number;
-}
-
-export function removeAccessibleRolls(grid: Grid): RemoveAccessibleRollsResult {
+export function removeAccessibleRolls(grid: MutGrid): number {
   let rollsRemoved = 0;
-  let currentGrid = grid;
-  for (let rowIndex = 0; rowIndex < currentGrid.length; rowIndex++) {
+  for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
     let rowUpdated = false;
 
-    const row = currentGrid[rowIndex]!;
+    const row = grid[rowIndex]!;
     for (let colIndex = 0; colIndex < row.length; colIndex++) {
       if (
-        isToiletRoll(currentGrid, [rowIndex, colIndex]) &&
-        isAccessible(currentGrid, [rowIndex, colIndex])
+        isToiletRoll(grid, [rowIndex, colIndex]) &&
+        isAccessible(grid, [rowIndex, colIndex])
       ) {
-        currentGrid = updateGrid(currentGrid, [rowIndex, colIndex], '.');
+        updateGridInPlace(grid, [rowIndex, colIndex], '.');
         rollsRemoved++;
         rowUpdated = true;
       }
@@ -88,18 +95,13 @@ export function removeAccessibleRolls(grid: Grid): RemoveAccessibleRollsResult {
     if (rowUpdated) rowIndex = Math.max(rowIndex - 2, -1);
   }
 
-  return {
-    updatedGrid: currentGrid,
-    rollsRemoved,
-  };
+  return rollsRemoved;
 }
 
-export function countAccessibleRollsProgressively(grid: Grid): number {
-  let currentGrid = grid;
+export function countAccessibleRollsProgressively(grid: MutGrid): number {
+  const result = removeAccessibleRolls(grid);
 
-  const result = removeAccessibleRolls(currentGrid);
+  console.table(grid);
 
-  console.table(currentGrid);
-
-  return result.rollsRemoved;
+  return result;
 }
