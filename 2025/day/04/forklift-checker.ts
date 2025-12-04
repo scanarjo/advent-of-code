@@ -71,28 +71,23 @@ interface RemoveAccessibleRollsResult {
 
 export function removeAccessibleRolls(grid: Grid): RemoveAccessibleRollsResult {
   let rollsRemoved = 0;
-  let rollsFound = <Point[]>[];
-  for (let rowIndex = 0; rowIndex < grid.length; rowIndex++) {
-    const row = grid[rowIndex]!;
+  let currentGrid = grid;
+  for (let rowIndex = 0; rowIndex < currentGrid.length; rowIndex++) {
+    const row = currentGrid[rowIndex]!;
 
     for (let colIndex = 0; colIndex < row.length; colIndex++) {
       if (
-        isToiletRoll(grid, [rowIndex, colIndex]) &&
-        isAccessible(grid, [rowIndex, colIndex])
+        isToiletRoll(currentGrid, [rowIndex, colIndex]) &&
+        isAccessible(currentGrid, [rowIndex, colIndex])
       ) {
-        rollsFound.push([rowIndex, colIndex]);
+        currentGrid = updateGrid(currentGrid, [rowIndex, colIndex], '.');
         rollsRemoved++;
       }
     }
   }
 
-  let updatedGrid = grid;
-  for (const point of rollsFound) {
-    updatedGrid = updateGrid(updatedGrid, point, '.');
-  }
-
   return {
-    updatedGrid,
+    updatedGrid: currentGrid,
     rollsRemoved,
   };
 }
