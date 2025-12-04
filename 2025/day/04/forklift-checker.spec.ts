@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'bun:test';
 import { readLinesFromFile } from 'utils';
 
-import { countAccessibleRolls } from './forklift-checker';
+import {
+  countAccessibleRolls,
+  countAccessibleRollsProgressively,
+} from './forklift-checker';
 
 const sampleData = await readLinesFromFile(__dirname + '/sample.txt');
 
@@ -12,5 +15,11 @@ describe('countAccessibleRolls', () => {
 
   it('should correctly count the rolls in a single row grid', () => {
     expect(countAccessibleRolls(['...@...'])).toBe(1);
+  });
+});
+
+describe('countAccessibleRollsProgressively', () => {
+  it('should correctly count the accessible rolls with successive passes for the sample data', () => {
+    expect(countAccessibleRollsProgressively(sampleData)).toBe(43);
   });
 });
