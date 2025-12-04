@@ -71,8 +71,9 @@ export function removeAccessibleRolls(grid: Grid): RemoveAccessibleRollsResult {
   let rollsRemoved = 0;
   let currentGrid = grid;
   for (let rowIndex = 0; rowIndex < currentGrid.length; rowIndex++) {
-    const row = currentGrid[rowIndex]!;
+    let rowUpdated = false;
 
+    const row = currentGrid[rowIndex]!;
     for (let colIndex = 0; colIndex < row.length; colIndex++) {
       if (
         isToiletRoll(currentGrid, [rowIndex, colIndex]) &&
@@ -80,8 +81,11 @@ export function removeAccessibleRolls(grid: Grid): RemoveAccessibleRollsResult {
       ) {
         currentGrid = updateGrid(currentGrid, [rowIndex, colIndex], '.');
         rollsRemoved++;
+        rowUpdated = true;
       }
     }
+
+    if (rowUpdated) rowIndex = Math.max(rowIndex - 2, -1);
   }
 
   return {
@@ -91,20 +95,11 @@ export function removeAccessibleRolls(grid: Grid): RemoveAccessibleRollsResult {
 }
 
 export function countAccessibleRollsProgressively(grid: Grid): number {
-  let totalRollsRemoved = 0;
-  let rollsRemoved = 0;
   let currentGrid = grid;
 
-  do {
-    const result = removeAccessibleRolls(currentGrid);
-
-    currentGrid = result.updatedGrid;
-    rollsRemoved = result.rollsRemoved;
-
-    totalRollsRemoved += rollsRemoved;
-  } while (rollsRemoved > 0);
+  const result = removeAccessibleRolls(currentGrid);
 
   console.table(currentGrid);
 
-  return totalRollsRemoved;
+  return result.rollsRemoved;
 }
