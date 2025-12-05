@@ -23,3 +23,30 @@ export function countFreshIngredients(sampleData: string[]): number {
 
   return totalIngredients - ingredientIds.length;
 }
+export function countAllPossibleFreshIngredients(sampleData: string[]): number {
+  const splitIndex = sampleData.findIndex((string) => string === '');
+
+  const freshRanges = sampleData
+    .slice(0, splitIndex)
+    .map((range) => range.split('-'))
+    .map((range) => range.map(parseDenaryInt))
+    .sort((rangeA, rangeB) => rangeA[0]! - rangeB[0]!);
+
+  const min = freshRanges[0]![0]!;
+
+  const adjustedRanges = freshRanges.map((range) => range.map((n) => n - min));
+
+  console.log(adjustedRanges);
+
+  const freshIds = new Set<number>();
+  for (const range of freshRanges) {
+    const min = range[0]!;
+    const max = range[1]!;
+
+    for (let n = min; n < max + 1; n++) {
+      freshIds.add(n);
+    }
+  }
+
+  return freshIds.size;
+}
