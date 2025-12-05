@@ -1,6 +1,4 @@
-function parseDenaryInt(n: string): number {
-  return Number.parseInt(n, 10);
-}
+import { parseDenaryInt } from 'utils';
 
 export function findMaxJoltage(
   batteryBank: string,

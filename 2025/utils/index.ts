@@ -5,3 +5,7 @@ export async function readLinesFromFile(path: string) {
 
   return fileContents.trimEnd().split(/[\r\n]/);
 }
+
+export function parseDenaryInt(n: string): number {
+  return Number.parseInt(n, 10);
+}
