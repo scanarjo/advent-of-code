@@ -9,3 +9,6 @@ export async function readLinesFromFile(path: string) {
 export function parseDenaryInt(n: string): number {
   return Number.parseInt(n, 10);
 }
+export function isInRange(min: number, max: number, target: number) {
+  return target >= min && target < max;
+}

@@ -1,3 +1,5 @@
+import { isInRange } from 'utils';
+
 const DIAL_MAX = 99;
 const DIAL_MODULUS = DIAL_MAX + 1;
 
@@ -11,7 +13,7 @@ interface RotationResult {
 }
 
 function parseInstruction(
-  instruction: string,
+  instruction: string
 ): [direction: 'L' | 'R', amount: number] {
   const direction = instruction.at(0) === 'L' ? 'L' : 'R';
 
@@ -20,17 +22,13 @@ function parseInstruction(
   return [direction, amount];
 }
 
-function isInRange(min: number, max: number, target: number) {
-  return target >= min && target < max;
-}
-
 function quotient(dividend: number, divisor: number): number {
   return Math.floor(Math.abs(dividend / divisor));
 }
 
 export function rotateDial(
   startPos: number,
-  instruction: string,
+  instruction: string
 ): RotationResult {
   const [direction, amount] = parseInstruction(instruction);
 
